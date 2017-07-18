@@ -31,7 +31,7 @@ function acceptBid(request) {
               "attachments": [
         				{
             			 "color": "#ed0707",
-	        				 "text":"You bid was not accepted as the format of your bid was incorrect \n send your bid the following format /bidcar <numeric value> <bid reference> \n e.g. /bidcar 200000 SDFsdsf234"
+	        				 "text" : "You bid was not accepted as the format of your bid was incorrect \n send your bid the following format /bidcar <numeric value> <bid reference> \n e.g. /bidcar 200000 SDFsdsf234"
         				}
     				]
             }),
@@ -50,11 +50,11 @@ function acceptBid(request) {
               const response = {
                       statusCode: 200,
                       body: JSON.stringify({
-                      "message": 'Sorry, Bid for The Car is already closed'],
+                      "message": 'Sorry, Bid for The Car is already closed',
                       "attachments": [
                           {
-                            "color": "#36a64f",
-                            "text": "Thanks for showing interest however we cannot process this bid now :heavy_exclamation_mark: as this auction has already been expired, against Bid Reference " + array[1]
+                            "color": "#ed0707",
+                            "text": "Thanks for showing interest however we cannot process this bid now :heavy_exclamation_mark: as this auction has already been expired, against Bid Reference *" + bidReference + "*"
                           }
                         ]
                       }),
