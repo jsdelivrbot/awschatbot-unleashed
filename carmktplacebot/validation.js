@@ -180,7 +180,29 @@ module.exports.validateCarDetails = function (carBrandName,
           if(imageUpload === 'Y')
           {
               //Rajat bhai ker de
-          }
+
+                return databaseManager.checkImageUpload(uniqueReferenceNumber).then(imageImploadResponse => {
+
+                if(imageImploadResponse.Count === 0){
+
+                  return buildValidationResult(false, 
+                                          'ImageUpload',
+                                          '*Post Upload* images click on *Have Uploaded* or *Have No Images* if you don not want',
+                                          'Specify your input by selecting an option below',
+                                          'Choose one of the options below',
+                                          true);   
+
+                }
+                else {  
+                        return buildValidationResult(true, 
+                                                    null,
+                                                    null,
+                                                    null,
+                                                    null,
+                                                    null);   
+                    }
+            });
+        }
       }
       return buildValidationResult(true, null, null,null,null,null);
 }
