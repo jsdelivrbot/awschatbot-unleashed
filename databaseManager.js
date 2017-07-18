@@ -142,6 +142,28 @@ module.exports.validateUserIdAndBidRef = function(bidRef,userId)
   	});
 };
 
+module.exports.checkValidityOfAuction = function(bidRef)
+{
+	console.log(`INSIDE checkValidityOfAuction And Bid Reference number ${bidRef}`);	
+	const params = {
+	    TableName: 'car-bid-master',
+	    Key:{
+        	'bid_reference': bidRef
+        }
+  	};
+	const getAsync = promisify(dynamo.get, dynamo);
+	return getAsync(params).then(response => {
+		console.log(`After hitting dynamo.getItem response is ${JSON.stringify(response)}`);
+	    if (_.isEmpty(response)) {
+	      console.log(`Bid with bidId:${bidRef} not found`);
+	      return Promise.reject(new Error(`Bid with bidId:${bidRef} not found`));
+	    }
+    	console.log(response);
+    	return response;
+  	});
+};
+
+
 function saveItemToTable(tableName, item) {
 	const params = {
     	TableName: tableName,

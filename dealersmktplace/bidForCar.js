@@ -44,6 +44,26 @@ function acceptBid(request) {
       		var dealerSlackId = request.user_id;
       		var bidAmount = array[0];
 
+          return checkAuctionValidity(bidReference).then((getBidDetails)=>{
+            if(getBidDetails.Item.is_active === 'N')
+            {
+              const response = {
+                      statusCode: 200,
+                      body: JSON.stringify({
+                      "message": 'Sorry, Bid for The Car is already closed'],
+                      "attachments": [
+                          {
+                            "color": "#36a64f",
+                            "text": "Thanks for showing interest however we cannot process this bid now :heavy_exclamation_mark: as this auction has already been expired, against Bid Reference " + array[1]
+                          }
+                        ]
+                      }),
+              };
+              return Promise.resolve(response);
+            }
+
+          });
+
       		return recordBidSubmission(bidReference,dealerName,dealerSlackId,bidAmount).then(() =>{
       			const response = {
               				statusCode: 200,
@@ -67,4 +87,8 @@ function acceptBid(request) {
 };
 function recordBidSubmission(bidReference,dealerName,dealerSlackId,bidAmount){
 	return databaseManager.recordBidSubmission(bidReference,dealerName,dealerSlackId,bidAmount);
+}
+
+function checkAuctionValidity(bidReference){
+  return databaseManager.checkValidityOfAuction(bidReference);
 }
