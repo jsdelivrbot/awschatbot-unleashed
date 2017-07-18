@@ -2,10 +2,7 @@ const url = require('url');
 const querystring = require('querystring');
 const request = require('request-promise');
 const date = require('date-and-time');
-
-/*added by ratewar*/
 const databaseManager = require('../databaseManager');
-
 
 module.exports = function (securityToken,
                             channelName,
@@ -32,16 +29,13 @@ module.exports = function (securityToken,
       json: true,
     };
     request(options).then((response) => {
-        console.log(`Channel id is ${response.channel.id}`);
+
         let now = new Date();
         let auctionCreateDate = date.format(now,'YYYY-MM-DD');
         let tempAuctionExpiryDate = date.addDays(now,numberofDays);
         let auctionExpiryDate = date.format(tempAuctionExpiryDate,'YYYY-MM-DD');
-        //Need to fetch the S3 URL and append in the message below
-        //RAJAT RATEWAL
-
         return databaseManager.checkImageUpload(uniqueReferenceNumber).then(imageImploadResponse => {
-                console.log('Bid Reference Passed:' + uniqueReferenceNumber);
+              
                 var filenames='';
                 imageImploadResponse.Items.forEach(function(item) {
                           console.log("Files are -", item.filename);
@@ -87,7 +81,6 @@ function inviteDealers(securityToken,channelId,message) {
       for (var i = 0; i < response.members.length; i++)
       {
           var member = response.members[i];
-          console.log(`found another member ${member.id} and the name of the member is ${member.profile.first_name}`);
           var options = {
               method: "POST",
               uri: url,
@@ -110,8 +103,6 @@ function inviteDealers(securityToken,channelId,message) {
   });
 }
 function postMessage(securityToken,channelId,message) {
-  console.log(`channelId ${channelId}`);
-  console.log(`message is ${message}`);
   var url = "https://slack.com/api/chat.postMessage";
   var options = {
     method: "POST",

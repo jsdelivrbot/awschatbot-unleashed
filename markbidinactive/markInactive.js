@@ -7,26 +7,23 @@ module.exports = function (event) {
 }
 
 function invalidateBids(request) {
-console.log("Started updating the Bids in DynamoDB");	
- 
-var AWS = require('aws-sdk');
-var docClient = new AWS.DynamoDB.DocumentClient();
-var today=new Date().toISOString().substr(0,10);
-var table = "car-bid-master";
-
-console.log("Querying for bids that are to be marked as invalid.");
+    console.log("Started updating the Bids in DynamoDB");	
+    var AWS = require('aws-sdk');
+    var docClient = new AWS.DynamoDB.DocumentClient();
+    var today=new Date().toISOString().substr(0,10);
+    var table = "car-bid-master";
+    console.log("Querying for bids that are to be marked as invalid.");
     
    var params = {
-    TableName : table,
-    KeyConditionExpression: "#valid = :getdate",
-    ExpressionAttributeNames:{
-        "#valid": "auction_end_date"
-    },
-    ExpressionAttributeValues: {
-        ":getdate": today
-    }
+            TableName : table,
+            KeyConditionExpression: "#valid = :getdate",
+            ExpressionAttributeNames:{
+                "#valid": "auction_end_date"
+            },
+            ExpressionAttributeValues: {
+                ":getdate": today
+            }
     };
-    
     docClient.query(params, function(err, data) {
     if (err) {
         console.log("Unable to query. Error:", JSON.stringify(err, null, 2));

@@ -27,8 +27,7 @@ module.exports = function(intentRequest) {
     const source = intentRequest.invocationSource;
     var userId = intentRequest.userId;
     var sessionAttributes = intentRequest.sessionAttributes;
-    console.log(`I have decided to print Session Attributes BEFORE as well ${JSON.stringify(sessionAttributes)}`);
-    //Change-10 for unique reference number in session attributes
+        
     var isSessionAttributeEmpty = _.isEmpty(sessionAttributes);
     var uniqueReferenceNumber;
     if(isSessionAttributeEmpty)
@@ -37,35 +36,7 @@ module.exports = function(intentRequest) {
        sessionAttributes = {};
        sessionAttributes.uniqueReferenceNumber = uniqueReferenceNumber;
     }
-    console.log(`The confirmation status is ${confirmationStatus}`);
-    console.log(`The inputTranscript is ${inputTranscript}`);
-    console.log(` carBrandName ${carBrandName}`);
-    console.log(` carModel ${carModel}`);
-    console.log(` carYearOfMake ${carYearOfMake}`);
-    console.log(` carVariant ${carVariant}`);
-    console.log(` carKmDriven ${carKmDriven}`);
-    console.log(` carColor ${carColor}`);
-    console.log(` numberOfOwners ${numberOfOwners}`);
-    console.log(` carCity ${carCity}`);
-    console.log(` shortDescription ${shortDescription}`);
-    console.log(` number of days ${numberofDays}`);
-    console.log(` Email Address ${emailAddress}`);
-    console.log(` Image Upload ${imageUpload}`);
-    
-  /*  const validationResult = validator.validateCarDetails(carBrandName,
-                                                          carModel,
-                                                          carYearOfMake,
-                                                          carVariant,
-                                                          carKmDriven,
-                                                          carColor,
-                                                          numberOfOwners,
-                                                          carCity,
-                                                          shortDescription,
-                                                          numberofDays,
-                                                          emailAddress,
-                                                          imageUpload,
-                                                          sessionAttributes.uniqueReferenceNumber);*/
-
+  
     return validator(carBrandName,carModel,carYearOfMake,carVariant,carKmDriven,
                      carColor,numberOfOwners,carCity,shortDescription,numberofDays,
                      emailAddress,imageUpload,sessionAttributes.uniqueReferenceNumber).then((validationResult) => {
@@ -81,7 +52,7 @@ module.exports = function(intentRequest) {
        sessionAttributes = tempSessionAttributes;
     }// end of if(validationResult.isValid)
 
-    console.log(`print Session Attributes MORE AFTER as well ${JSON.stringify(sessionAttributes)}`);
+  
     if (!validationResult.isValid)
     {
       /*
@@ -95,7 +66,7 @@ module.exports = function(intentRequest) {
 
       if(!isSessionAttributeEmpty && sessionAttributes.hasOwnProperty('violatedSlot'))
       {
-           console.log(`sessionAttributes Violated Slot is ${sessionAttributes.violatedSlot}`) ;
+           
            if(sessionAttributes.violatedSlot === validationResult.violatedSlot)
            {
               var fulfilmentResponse = lexResponses.buildFulfilmentResult('Fulfilled', 'I wish I could help you but unfortunately with provided details, I will not be able to proceed any further. \n Thank you for your visit and Have a Great Day!');
@@ -131,17 +102,13 @@ module.exports = function(intentRequest) {
     }//end of  if (!validationResult.isValid)
     //*************************End of Validation*********************************
 
-    console.log(`checking for Confirmation Status check ${confirmationStatus}`);
+    
     if(confirmationStatus !== 'Confirmed' && confirmationStatus !== 'Denied')
     {
-          console.log('right outside the car km driven elicit slot construct');
-          if(carBrandName !== null && carModel !== null && carYearOfMake !== null &&
+       if(carBrandName !== null && carModel !== null && carYearOfMake !== null &&
               carVariant !== null && carKmDriven === null)
           {
-               //Change-10 for unique reference number in session attributes
-              //sessionAttributes = {};
-              console.log('inside Car Km Driven Elicit Slot construct');
-              var options = lexResponses.buildOptions('CarKmDriven');
+             var options = lexResponses.buildOptions('CarKmDriven');
               responseCard = lexResponses.buildResponseCard('Specify Car Km Driven',
                                                'Choose one of the options or mention exact figure',
                                                options);
@@ -159,9 +126,6 @@ module.exports = function(intentRequest) {
           if(carBrandName !== null && carModel !== null && carYearOfMake !== null &&
              carVariant !== null && carKmDriven !== null && carColor !== null && numberOfOwners === null)
           {
-              //Change-10 for unique reference number in session attributes
-              //sessionAttributes = {};
-              console.log('inside Number Of Owners Elicit Slot construct');
               var options = lexResponses.buildOptions('NumberOfOwners');
               responseCard = lexResponses.buildResponseCard('Specify Number of Owners',
                                                'Choose one of the options below or Mention number in the message box below',
@@ -182,9 +146,6 @@ module.exports = function(intentRequest) {
              numberOfOwners !== null && carCity !== null && shortDescription !== null &&
              maximumSellingPrice !== null && numberofDays === null)
           {
-              //Change-10 for unique reference number in session attributes
-              //sessionAttributes = {};
-              console.log('inside Auction Expire Elicit Slot construct');
               var options = lexResponses.buildOptions('NumberOfDays');
               responseCard = lexResponses.buildResponseCard('Specify Number of Days for Auction Expire',
                                                         'Choose one of the options below or Mention number in the message box below',
@@ -205,9 +166,6 @@ module.exports = function(intentRequest) {
              numberOfOwners !== null && maximumSellingPrice !== null && carCity !== null && 
              shortDescription !== null && numberofDays !== null && imageUpload === null)
           {
-              //Change-10 for unique reference number in session attributes
-              //sessionAttributes = {};
-              console.log('inside Image Upload Elicit Slot construct');
               var options = lexResponses.buildOptions('ImageUpload');
               responseCard = lexResponses.buildResponseCard('Uplod Images of Your Car which increases chances for better price',
                                                         'Specify your input by selecting an option below',
@@ -228,14 +186,13 @@ module.exports = function(intentRequest) {
              numberOfOwners !== null && carCity !== null && shortDescription !== null &&
              maximumSellingPrice !== null && numberofDays !== null && emailAddress !== null)
            {
-              console.log(`Number of days RRRRRRRRRRRRRR are ${numberofDays}`);
+              
               var localEmailAddress = emailAddress.substring(emailAddress.indexOf("|") + 1);
               let now = new Date();
             	let auctionCreateDate = date.format(now,'YYYY-MM-DD');
             	let tempAuctionExpiryDate = date.addDays(now,parseInt(numberofDays));
             	let auctionExpiryDate = date.format(tempAuctionExpiryDate,'YYYY-MM-DD');
-              console.log(`Auction Date is ${auctionCreateDate}`);
-              console.log(`Auction Expiry Date is ${auctionExpiryDate}`);
+              
               var message = {
                             contentType: 'PlainText',
                             content: `Great I have got all the details I need, do you want me to proceed further and put up your *Car for Auction* with following details:\n` +
@@ -264,14 +221,13 @@ module.exports = function(intentRequest) {
     console.log(`checking for Denied value of confirmation status ${confirmationStatus}`);
     if(confirmationStatus === 'Denied')
     {
-        console.log('Inside Denied check and creating close response');
         var fulfilmentResponse = lexResponses.buildFulfilmentResult('Fulfilled', 'Ok, Your Car will not be put up Auction, I hope you had a great experience talking to me. I will be happy to assist you again in future. \n Have a Great Day!');
         intentRequest.sessionAttributes = {};
         return Promise.resolve(lexResponses.close(intentRequest.sessionAttributes,
                                                         fulfilmentResponse.fullfilmentState,
                                                         fulfilmentResponse.message));
     }
-    console.log('before Creting Delegate Response');
+    
     return Promise.resolve(lexResponses.delegate(sessionAttributes,
 											                             intentRequest.currentIntent.slots));
   }); 

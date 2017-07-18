@@ -35,8 +35,6 @@ module.exports = function(intentRequest) {
                       numberofDays,
                       emailAddress,
                       sessionAttributes).then(fullfiledOrder => {
-            //Change-10 for unique reference number in session attributes            
-            //before calling close clear session attributes.
             sessionAttributes = {};              
     return lexResponses.close(sessionAttributes,
                               fullfiledOrder.fullfilmentState,
@@ -49,8 +47,7 @@ function createCarBid(userId,carBrandName,carModel,
                       maximumSellingPrice,
                       numberofDays,emailAddress,
                       sessionAttributes) {
-  //Change-10 for unique reference number in session attributes            
-  //var uniqueReferenceNumber = shortid.generate();
+  
   var uniqueReferenceNumber = sessionAttributes.uniqueReferenceNumber;
   return databaseManager.createCarBid(userId,carBrandName,carModel,
                                       carYearOfMake,carVariant,carKmDriven,
@@ -81,13 +78,12 @@ function createBidChannel(dealerMarketPlaceResponse,channelName,uniqueReferenceN
                             carKmDriven,carColor,numberOfOwners,carCity,
                             shortDescription,maximumSellingPrice,
                             numberofDays){
-    console.log('*********************** Dealer Market Place Token is ');
+    
     /*
     * We may have multiple Dealer Market Places hence it will create channels on all the Dealer Market places
     * Multiple Dealer Market Places are only possible when multiple slack teams have installed Dealer MarketPlace app 
     */
     dealerMarketPlaceResponse.Items.forEach(function(item) {
-        console.log(" ***** " + item.security_token + ": " + item.market_place_type);
         slackChannelFactory(item.security_token,
                                 channelName,
                                 uniqueReferenceNumber,

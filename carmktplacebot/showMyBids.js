@@ -12,21 +12,15 @@ module.exports = function(intentRequest) {
     var sessionAttributes = intentRequest.sessionAttributes;
     var userId = intentRequest.userId;
     const source = intentRequest.invocationSource;    
-    console.log(`Session Attributes are ${JSON.stringify(sessionAttributes)}`);
+    
     if (source === 'DialogCodeHook') 
     {
         return validator(bidRef,dealerRef,userId).then((validationResult) => {
-            console.log(`validationResult is ${JSON.stringify(validationResult)}`);
-
-            if (!validationResult.isValid)
+           if (!validationResult.isValid)
             {
-                  console.log(`Validation is invalid Session Attributes are ${JSON.stringify(sessionAttributes)}`);
                  var isSessionAttributeEmpty = _.isEmpty(sessionAttributes);
-                 console.log(`Is Session Attribute empty ${isSessionAttributeEmpty}`);
                  if(!isSessionAttributeEmpty)
                  {
-                    console.log(`Because Session attribute is not empty checking validationResult.violatedSlot ${validationResult.violatedSlot}`);
-                    console.log(`Also checking sessionAttributes.violatedSlot ${sessionAttributes.violatedSlot}`);
                     if(sessionAttributes.violatedSlot === validationResult.violatedSlot)
                     {
                         sessionAttributes = {};
@@ -49,13 +43,9 @@ module.exports = function(intentRequest) {
                 console.log(strResponse);
                 return Promise.resolve(response);
             }
-            console.log('after validation is done checking for bidref');
             if(bidRef != null && dealerRef === null)
             {
-                console.log('since bid ref is not null calling process request');
                 return processRequest(bidRef,userId).then(response => {
-                    //return lexResponses.close(intentRequest.sessionAttributes, fullfiledRequest.fullfilmentState, fullfiledRequest.message);
-                    console.log(`response from Show bids process request is ${response}`);
                     var message = { contentType: 'PlainText', content: `${response}`};
                     return Promise.resolve(lexResponses.elicitSlot(intentRequest.sessionAttributes,
                                                                     intentRequest.currentIntent.name,
@@ -80,10 +70,8 @@ module.exports = function(intentRequest) {
 };
 function processRequest(bidRef,userId) {
     return databaseManager.validateUserIdAndBidRef(bidRef,userId).then(response1 => {
-        console.log(`After calling validateUserIdAndBidRef I have got ${JSON.stringify(response1)}`);
         var isAuctionActive = response1.Item.is_active;
         return databaseManager.findBids(bidRef).then(response => {
-            console.log('fullfilRequest invoked with');
             var message = 'Going good...';
             var message1 = 'We have received ';
             var message2 = ' Bids so far :smile:. Here are the bid details alongwith Dealer Reference Number for your consideration ' + '\r\n \r\n';
@@ -106,18 +94,14 @@ function processRequest(bidRef,userId) {
                     finalmsg += `If you like any of the bids and like to pursue the discussion further please mention the *Dealer Reference* number`;
                     finalmsg += ' And I will share your *email address* with the respective dealer for him/her to contact you\r\n';
                 }
-                console.log('sending final message with bid details are ' + finalmsg);
-                //return buildFulfilmentResult('Fulfilled', finalmsg);
                 return finalmsg;
             }
             else
             {
-                console.log('Sending final message with NO bids ' + nobidsmessage);
-                return nobidsmessage;
+               return nobidsmessage;
             }  
     });  
   }).catch(error => {
-        console.log(`Inside Error Block of validateUserIdAndBidRef ${error}`);
         return `hmm...I could not find any bids for your Car as of now. Pls check if you provided correct Bid Reference Number *${bidRef}*`; 
   });
 }

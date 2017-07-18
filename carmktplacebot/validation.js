@@ -4,7 +4,7 @@ const isNumeric = require('isnumeric');
 var validator = require('validator');
 const promisify = require('es6-promisify');
 const databaseManager = require('../databaseManager');
-//module.exports.validateCarDetails = function (carBrandName,
+
 module.exports = function (carBrandName,
                              carModel,
                               carYearOfMake,
@@ -168,7 +168,7 @@ module.exports = function (carBrandName,
       }
       if(imageUpload)
       {
-          console.log(`inside validation check for Image Upload ${imageUpload}`);
+          
           if(imageUpload !== 'N' && imageUpload !== 'Y')
           {
               return Promise.resolve(buildValidationResult(false, 
@@ -181,8 +181,6 @@ module.exports = function (carBrandName,
           if(imageUpload === 'Y')
           {
                 
-                //Rajat bhai ker de
-                console.log('Inside Image Upload validtion Y');
                 return databaseManager.checkImageUpload(uniqueReferenceNumber).then(imageImploadResponse => {
 
                 if(imageImploadResponse.Count === 0){
