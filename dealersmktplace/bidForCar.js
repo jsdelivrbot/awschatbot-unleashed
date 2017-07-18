@@ -45,26 +45,43 @@ function acceptBid(request) {
       		var bidAmount = array[0];
 
           return checkAuctionValidity(bidReference).then((getBidDetails)=>{
-            if(getBidDetails.Item.is_active === 'N')
-            {
-              const response = {
-                      statusCode: 200,
-                      body: JSON.stringify({
-                      "message": 'Sorry, Bid for The Car is already closed',
-                      "attachments": [
-                          {
-                            "color": "#ed0707",
-                            "text": "Thanks for showing interest however we cannot process this bid now :heavy_exclamation_mark: as this auction has already been expired, against Bid Reference *" + bidReference + "*"
-                          }
-                        ]
-                      }),
-              };
-              return Promise.resolve(response);
-            }
-
+              if(getBidDetails.Item.is_active === 'N')
+              {
+                  const response = {
+                        statusCode: 200,
+                        body: JSON.stringify({
+                        "message": 'Sorry, Bid for The Car is already closed',
+                        "attachments": [
+                            {
+                              "color": "#ed0707",
+                              "text": "Thanks for showing interest however we cannot process this bid now :heavy_exclamation_mark: as this auction has already been expired, against Bid Reference *" + bidReference + "*"
+                            }
+                          ]
+                        }),
+                   };
+                   return Promise.resolve(response);
+               }
+               else
+               {
+                    return recordBidSubmission(bidReference,dealerName,dealerSlackId,bidAmount).then(() =>{
+                        const response = {
+                            statusCode: 200,
+                            body: JSON.stringify({
+                                "message": 'Bid for The Car is:' + request['text'] + ' posted by user:' + request['user_name'] + ' in Channel:' + request['channel_name'],
+                                "attachments": [
+                                    {
+                                      "color": "#36a64f",
+                                      "text": "Cool :smile: Your Bid for Car reference : " + array[1] + " for INR. " + array[0] + " has been recorded successfully for seller to look at. \n \n Expect a reply if seller is interested. \n \n In case you like to bid again you are allowed until bid is closed."
+                                    }
+                ]
+                            }),
+                        };
+                        return Promise.resolve(response);
+                    });
+               }
           });
 
-      		return recordBidSubmission(bidReference,dealerName,dealerSlackId,bidAmount).then(() =>{
+      	/*	return recordBidSubmission(bidReference,dealerName,dealerSlackId,bidAmount).then(() =>{
       			const response = {
               				statusCode: 200,
               				body: JSON.stringify({
@@ -78,7 +95,7 @@ function acceptBid(request) {
               			}),
           		};
           		return Promise.resolve(response);
-      		});
+      		});*/
       		
       }
   }catch(err) {

@@ -128,17 +128,33 @@ module.exports.validateUserIdAndBidRef = function(bidRef,userId)
 	const getAsync = promisify(dynamo.get, dynamo);
 	return getAsync(params).then(response => {
 		console.log(`After hitting dynamo.getItem response is ${JSON.stringify(response)}`);
-	    if (_.isEmpty(response)) {
+	  /*if (_.isEmpty(response)) {
 	      console.log(`Bid with bidId:${bidRef} not found`);
-	      return Promise.reject(new Error(`Bid with bidId:${bidRef} not found`));
+	      return Promise.resolve(`Could not find any bids which mataches *${bidRef}*`);
 	    }
 	    if(response.Item.userId !== userId)
 	    {
 	    	console.log(`Bid Reference ${bidRef} Does not belong to user ${userId}`);
 	      	return Promise.reject(new Error(`Bid Reference ${bidRef} does not belong to you hence please provide valid reference number`));	
-	    }
+	    }*/
     	console.log(response);
-    	return response;
+    	return Promise.resolve(response);
+  	});
+};
+module.exports.validateBidRefAndDealerRef = function(bidRef,dealerRef)
+{
+	console.log(`INSIDE validateBidRefAndDealerRef bid ref ${bidRef} and dealer ref ${dealerRef}`);	
+	const params = {
+	    TableName: 'car-bid-details',
+	    KeyConditionExpression: "bid_reference = :a",
+	    ExpressionAttributeValues : {
+	      ":a":bidRef
+	    }
+  	};
+	const getAsync = promisify(dynamo.query, dynamo);
+	return getAsync(params).then(response => {
+		console.log(response);
+    	return Promise.resolve(response);
   	});
 };
 
