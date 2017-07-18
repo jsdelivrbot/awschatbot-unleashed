@@ -42,7 +42,7 @@ module.exports = function (securityToken,
 
         return databaseManager.checkImageUpload(uniqueReferenceNumber).then(imageImploadResponse => {
                 console.log('Bid Reference Passed:' + uniqueReferenceNumber);
-                var filenames='\r\n';
+                var filenames='';
                 imageImploadResponse.Items.forEach(function(item) {
                           console.log("Files are -", item.filename);
                           filenames += item.filename + "\r\n";
@@ -61,7 +61,8 @@ module.exports = function (securityToken,
                       "Auction Creation Date : *" + auctionCreateDate + "*" + "\r\n" +
                       "Auction Expiry Date: *" + auctionExpiryDate + "*" + "\r\n" +
                       "Use the following reference number to bid for the vehicle *" + uniqueReferenceNumber + "*" + "\r\n" +
-                      "You can view images of the Car at following links:" + filenames;
+                      "To submit your bid type */bidforcar <amount> <bid reference> e.g. /bidforcar 600000 " + uniqueReferenceNumber + "*" + "\r\n" +
+                      "You can view images of the Car at following links: \r\n" + filenames;
                        inviteDealers(securityToken,response.channel.id,message);  
                 });
 

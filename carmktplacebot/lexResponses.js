@@ -80,11 +80,11 @@ module.exports.buildOptions = function(forSlot)
     if (forSlot === 'CarKmDriven')
     {
       return [
-          { text: 'Less than 12000', value: 'Less than 12000'},
-          { text: '12001 - 18000', value: '12001 - 18000'},
-          { text: '18001 - 24000', value: '18001 - 24000'},
-          { text: '24001 - 32000', value: '24001 - 32000'},
-          { text: '32001 - 40000', value: '32001 - 40000'},
+          { text: '0-5000', value: '0-5000'},
+          { text: '5000 - 20000', value: '5000 - 20000'},
+          { text: '20000 - 50000', value: '20000 - 50000'},
+          { text: '50000 - 200000', value: '50000 - 200000'},
+          { text: '> 200000', value: 'More than 200000'},
       ];
     }
     else if (forSlot === 'NumberOfOwners')
@@ -93,8 +93,6 @@ module.exports.buildOptions = function(forSlot)
           { text: 'Only one, me', value: 1},
           { text: 'I am Second', value: 2},
           { text: 'Including me 3', value: 3},
-          { text: 'Including me 4', value: 4},
-          { text: 'Including me 5', value: 5},
       ];
     }
     else if (forSlot === 'NumberOfDays')

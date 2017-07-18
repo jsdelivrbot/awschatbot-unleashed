@@ -26,7 +26,6 @@ does not have issues
     </CORSRule>
 </CORSConfiguration>
 
-```
 Also add this as Buket Policy for object access publicily
 
 {
@@ -39,10 +38,12 @@ Also add this as Buket Policy for object access publicily
 				"AWS": "*"
 			},
 			"Action": "s3:GetObject",
-			"Resource": "arn:aws:s3:::awschatbotimagehostnew/*"
+			"Resource": "arn:aws:s3:::S3_BUCKET/*"
 		}
 	]
 }
+
+```
 ## Running Locally
 
 
@@ -70,3 +71,7 @@ or
 
 [![Deploy to Heroku](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy)
 and go to setting tab and make sure you add environmet variables AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY and S3_BUCKET
+
+## Working Heroku Application (to upload images)
+
+https://marketplaceimages.herokuapp.com/

@@ -15,6 +15,16 @@ $ cd projectdir
 $ npm install
 $ sls deploy
 ```
+## To Install Market Place Apps which includes Chatbot and Slack Dealer Market Place app use below link
+
+1. [Market Place Apps](http://marketplaceapps.s3-website-us-east-1.amazonaws.com)
+
+2. Working Chatbot is installed on Slack on techunleashed.slack.com
+
+3. Working Dealer Market Place Slack app is installed on carsmktplace.slack.com
+
+4. To have access to Chatbot and Dealer Market place please send an email to vikasbajajs@gmail.com or rajatratewal@gmail.com
+
 ## Other Sub projects to manage images upload for the marketplace
 
 1. S3 Image Upload : A website is available seperately to upload images into S3, please refer README.MD uploadimages folder

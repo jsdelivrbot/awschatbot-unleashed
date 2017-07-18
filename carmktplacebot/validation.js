@@ -4,21 +4,22 @@ const isNumeric = require('isnumeric');
 var validator = require('validator');
 const promisify = require('es6-promisify');
 const databaseManager = require('../databaseManager');
-module.exports.validateCarDetails = function (carBrandName,
-                                               carModel,
-                                                carYearOfMake,
-                                                carVariant,
-                                                carKmDriven,
-                                                carColor,
-                                                numberOfOwners,
-                                                carCity,
-                                                shortDescription,
-                                                numberofDays,
-                                                emailAddress,
-                                                imageUpload,
-                                                uniqueReferenceNumber) {
+//module.exports.validateCarDetails = function (carBrandName,
+module.exports = function (carBrandName,
+                             carModel,
+                              carYearOfMake,
+                              carVariant,
+                              carKmDriven,
+                              carColor,
+                              numberOfOwners,
+                              carCity,
+                              shortDescription,
+                              numberofDays,
+                              emailAddress,
+                              imageUpload,
+                              uniqueReferenceNumber) {
      const carBrandNames = ['nissan', 'ford', 'jaguar', 'fiat', 'general motors', 'mahindra', 'bentley','bmw','mitsubishi','mazda','bugatti','buick','jeep','renault','datsun','acura','aston martin','maruti suzuki','tata','hyundai','isuzu','suzuki','honda','alfa romeo','audi','mercedes-benz','toyota'];
-     const carKmDrivenValues = ['less than 12000','12001 - 18000','18001 - 24000','24001 - 32000','32001 - 40000']; 
+     const carKmDrivenValues = ['0-5000','5000 - 20000','20000 - 50000','50000 - 200000','More than 200000']; 
      if(carBrandName)
      {
         var isCarBrandCarValid = carBrandNames.includes(carBrandName.toLowerCase());
@@ -34,12 +35,12 @@ module.exports.validateCarDetails = function (carBrandName,
                   counter++;
               });
               carBrandName = _.startCase(_.toLower(carBrandName));
-              return buildValidationResult(false,
+              return Promise.resolve(buildValidationResult(false,
                                            'CarBrandName',
                                            `Kindly note *${carBrandName}* is not in our list. pls check if your *Car Brand* exist in the list below as we only deal in the following *Car Brands* ${concatString}`,
                                            null,
                                            null,
-                                           false);
+                                           false));
         }
      }
      if(carYearOfMake)
@@ -47,31 +48,31 @@ module.exports.validateCarDetails = function (carBrandName,
          var text = /^[0-9]+$/;
          if (((carYearOfMake != "") && (!text.test(carYearOfMake))) || (carYearOfMake.length != 4))
          {
-          return buildValidationResult(false,
+          return Promise.resolve(buildValidationResult(false,
                                       'CarYearOfMake',
                                       `Please check ${carYearOfMake} is not a valid year, Valid year must be like YYYY format e.g. 2012`,
                                       null,
                                       null,
-                                      false);
+                                      false));
         }
         var current_year = new Date().getFullYear();
         if(carYearOfMake > current_year)
         {
-          return buildValidationResult(false, 
+          return Promise.resolve(buildValidationResult(false, 
                                         'CarYearOfMake',
                                         `Please check seems you have mistakenly entered a future year ${carYearOfMake}, kindly provide the correct Year of Make`,
                                         null,
                                         null,
-                                        false);
+                                        false));
         }
         if(carYearOfMake < 2000)
         {
-            return buildValidationResult(false, 
+            return Promise.resolve(buildValidationResult(false, 
                                         'CarYearOfMake',
                                         `Dealer Market Place does not response well for Cars which has Year of Make earlier than 2000, pls check if the year entered was correct and then reenter`,
                                         null,
                                         null,
-                                        false);
+                                        false));
         }
      }
       if(carKmDriven)
@@ -84,22 +85,22 @@ module.exports.validateCarDetails = function (carBrandName,
             {
                 if(carKmDriven <= 0)
                 {
-                  return buildValidationResult(false, 
+                  return Promise.resolve(buildValidationResult(false, 
                                         'CarKmDriven',
                                         `I cannot take ${carKmDriven} as Car Kms Driven figure.\n Specify Car Kms Driven either by choosing one of the options below or mention exact Kms figure`,
                                         'Specify Car Km Driven',
                                         'Choose one of the options or mention exact figure',
-                                        true);
+                                        true));
                 }
             }
             else
             {
-              return buildValidationResult(false, 
+              return Promise.resolve(buildValidationResult(false, 
                                         'CarKmDriven',
                                         `I cannot take ${carKmDriven} as Car Kms Driven figure.\n Specify Car Kms Driven either by choosing one of the options below or mention exact Kms figure`,
                                         'Specify Car Km Driven',
                                         'Choose one of the options or mention exact figure',
-                                        true);
+                                        true));
             }
          }
       }
@@ -108,24 +109,24 @@ module.exports.validateCarDetails = function (carBrandName,
          var isNumericFlag = isNumeric(numberOfOwners); 
          if(!isNumericFlag)
          {
-              return buildValidationResult(false, 
+              return Promise.resolve(buildValidationResult(false, 
                                           'NumberOfOwners',
                                           `Number of Owners has to be one of the values mentioned below or specify a number in the message box below`,
                                           'Specify Car Number of Owners',
                                           'Choose one of the options or mention number in the message box below',
-                                          true);      
+                                          true));      
          }
          else
          {
-            var isNumberOfOwnersValid = numberOfOwners > 0  && numberOfOwners <= 5; 
+            var isNumberOfOwnersValid = numberOfOwners > 0  && numberOfOwners <= 3; 
             if(!isNumberOfOwnersValid)
             {
-                return buildValidationResult(false, 
+                return Promise.resolve(buildValidationResult(false, 
                                           'NumberOfOwners',
                                           `Number of Owners has to be one of the values mentioned below or specify a number in the message box below`,
                                           'Specify Car Number of Owners',
                                           'Choose one of the options or mention number in the message box below',
-                                          true);          
+                                          true));          
             }
          }
       }
@@ -134,21 +135,21 @@ module.exports.validateCarDetails = function (carBrandName,
           var isAuctionExpireFlag = isNumeric(numberofDays); 
           if(!isAuctionExpireFlag)
           {
-             return buildValidationResult(false, 
+             return Promise.resolve(buildValidationResult(false, 
                                           'NumberOfDays',
                                           'Days for Auction Expire has to be one of the values mentioned below',
                                           'Specify Days for Auction Expire',
                                           'Choose one of the options below',
-                                          true);      
+                                          true));      
           }
           if(numberofDays < 3  || numberofDays > 5)
           {
-                return buildValidationResult(false, 
+                return Promise.resolve(buildValidationResult(false, 
                                           'NumberOfDays',
                                           'Days for Auction Expire has to be one of the values mentioned below',
                                           'Specify Days for Auction Expire',
                                           'Choose one of the options below',
-                                          true);      
+                                          true));      
           }         
       }
       if(emailAddress)
@@ -157,12 +158,12 @@ module.exports.validateCarDetails = function (carBrandName,
           var isValidEmailId = validator.isEmail(localEmailAddress); 
           if(!isValidEmailId)
           {
-              return buildValidationResult(false, 
+              return Promise.resolve(buildValidationResult(false, 
                                           'EmailAddress',
                                           'Please check your Email Address again',
                                           null,
                                           null,
-                                          false);      
+                                          false));      
           }
       }
       if(imageUpload)
@@ -170,41 +171,42 @@ module.exports.validateCarDetails = function (carBrandName,
           console.log(`inside validation check for Image Upload ${imageUpload}`);
           if(imageUpload !== 'N' && imageUpload !== 'Y')
           {
-              return buildValidationResult(false, 
+              return Promise.resolve(buildValidationResult(false, 
                                           'ImageUpload',
-                                          '*Post Upload* images click on *Have Uploaded* or *Have No Images* if you don not want',
+                                          'Sorry could not understand your reply. Pls note *Post Upload* images click on *Have Uploaded* or *Have No Images* if you don not want',
                                           'Specify your input by selecting an option below',
                                           'Choose one of the options below',
-                                          true);      
+                                          true));      
           }
           if(imageUpload === 'Y')
           {
-              //Rajat bhai ker de
-
+                
+                //Rajat bhai ker de
+                console.log('Inside Image Upload validtion Y');
                 return databaseManager.checkImageUpload(uniqueReferenceNumber).then(imageImploadResponse => {
 
                 if(imageImploadResponse.Count === 0){
-
-                  return buildValidationResult(false, 
+                    console.log('Image Count is 0 hence creating creating validtion result with false');
+                  return Promise.resolve(buildValidationResult(false, 
                                           'ImageUpload',
-                                          '*Post Upload* images click on *Have Uploaded* or *Have No Images* if you don not want',
+                                          'I could not find any images, pls repond appropriately. Use the following URL to upload images https://marketplaceimages.herokuapp.com/',
                                           'Specify your input by selecting an option below',
                                           'Choose one of the options below',
-                                          true);   
+                                          true));   
 
                 }
                 else {  
-                        return buildValidationResult(true, 
+                        return Promise.resolve(buildValidationResult(true, 
                                                     null,
                                                     null,
                                                     null,
                                                     null,
-                                                    null);   
+                                                    null));   
                     }
             });
         }
       }
-      return buildValidationResult(true, null, null,null,null,null);
+      return Promise.resolve(buildValidationResult(true, null, null,null,null,null));
 }
 function buildValidationResult(isValid, violatedSlot, messageContent, 
                                 responseCardTitle, responseCarSubtitle,isResponseCardRequired)

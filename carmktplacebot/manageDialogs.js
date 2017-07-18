@@ -51,7 +51,8 @@ module.exports = function(intentRequest) {
     console.log(` number of days ${numberofDays}`);
     console.log(` Email Address ${emailAddress}`);
     console.log(` Image Upload ${imageUpload}`);
-    const validationResult = validator.validateCarDetails(carBrandName,
+    
+  /*  const validationResult = validator.validateCarDetails(carBrandName,
                                                           carModel,
                                                           carYearOfMake,
                                                           carVariant,
@@ -63,8 +64,13 @@ module.exports = function(intentRequest) {
                                                           numberofDays,
                                                           emailAddress,
                                                           imageUpload,
-                                                          sessionAttributes.uniqueReferenceNumber);
+                                                          sessionAttributes.uniqueReferenceNumber);*/
 
+    return validator(carBrandName,carModel,carYearOfMake,carVariant,carKmDriven,
+                     carColor,numberOfOwners,carCity,shortDescription,numberofDays,
+                     emailAddress,imageUpload,sessionAttributes.uniqueReferenceNumber).then((validationResult) => {
+
+     
    /*
     If data is valid then remove all other session attributes except unique reference 
     */
@@ -73,7 +79,8 @@ module.exports = function(intentRequest) {
        var tempSessionAttributes = {};
        tempSessionAttributes.uniqueReferenceNumber = sessionAttributes.uniqueReferenceNumber;
        sessionAttributes = tempSessionAttributes;
-    }
+    }// end of if(validationResult.isValid)
+
     console.log(`print Session Attributes MORE AFTER as well ${JSON.stringify(sessionAttributes)}`);
     if (!validationResult.isValid)
     {
@@ -221,11 +228,14 @@ module.exports = function(intentRequest) {
              numberOfOwners !== null && carCity !== null && shortDescription !== null &&
              maximumSellingPrice !== null && numberofDays !== null && emailAddress !== null)
            {
+              console.log(`Number of days RRRRRRRRRRRRRR are ${numberofDays}`);
               var localEmailAddress = emailAddress.substring(emailAddress.indexOf("|") + 1);
               let now = new Date();
             	let auctionCreateDate = date.format(now,'YYYY-MM-DD');
-            	let tempAuctionExpiryDate = date.addDays(now,numberofDays);
+            	let tempAuctionExpiryDate = date.addDays(now,parseInt(numberofDays));
             	let auctionExpiryDate = date.format(tempAuctionExpiryDate,'YYYY-MM-DD');
+              console.log(`Auction Date is ${auctionCreateDate}`);
+              console.log(`Auction Expiry Date is ${auctionExpiryDate}`);
               var message = {
                             contentType: 'PlainText',
                             content: `Great I have got all the details I need, do you want me to proceed further and put up your *Car for Auction* with following details:\n` +
@@ -264,4 +274,5 @@ module.exports = function(intentRequest) {
     console.log('before Creting Delegate Response');
     return Promise.resolve(lexResponses.delegate(sessionAttributes,
 											                             intentRequest.currentIntent.slots));
+  }); 
 };

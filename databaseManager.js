@@ -33,7 +33,7 @@ module.exports.createCarBid = function(userId,
 	item.userId = userId;
 	item.bid_reference = uniqueReferenceNumber;
 	item.maximum_selling_price  = maximumSellingPrice;
-	item.is_action = 'Y';
+	item.is_active = 'Y';
 
 	let now = new Date();
 	let auctionCreateDate = date.format(now,'YYYY-MM-DD');
