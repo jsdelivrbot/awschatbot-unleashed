@@ -33,6 +33,15 @@ $ sls deploy
 
    [ImageUploadApp](https://marketplaceimages.herokuapp.com)
 
+
+## How to Initiate Discussion With ChatBot
+
+1. Start with Hello, Hola as an utterance
+
+2. Another utterance is sell my car 
+
+3. Sit tight and let Bot ask you relevant question for your car
+
 ## Architecture
 
 Higl level Overview of Architecture
