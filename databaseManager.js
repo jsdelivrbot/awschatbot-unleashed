@@ -116,6 +116,32 @@ module.exports.checkImageUpload = function(uniqueReferenceNumber) {
     	return response;
   	});
 };
+module.exports.validateUserIdAndBidRef = function(bidRef,userId)
+{
+	console.log(`INSIDE validateUserId And Bid Reference number ${bidRef} and user id ${userId}`);	
+	const params = {
+	    TableName: 'car-bid-master',
+	    Key:{
+        	'bid_reference': bidRef
+        }
+  	};
+	const getAsync = promisify(dynamo.get, dynamo);
+	return getAsync(params).then(response => {
+		console.log(`After hitting dynamo.getItem response is ${JSON.stringify(response)}`);
+	    if (_.isEmpty(response)) {
+	      console.log(`Bid with bidId:${bidRef} not found`);
+	      return Promise.reject(new Error(`Bid with bidId:${bidRef} not found`));
+	    }
+	    if(response.Item.userId !== userId)
+	    {
+	    	console.log(`Bid Reference ${bidRef} Does not belong to user ${userId}`);
+	      	return Promise.reject(new Error(`Bid Reference ${bidRef} does not belong to you hence please provide valid reference number`));	
+	    }
+    	console.log(response);
+    	return response;
+  	});
+};
+
 function saveItemToTable(tableName, item) {
 	const params = {
     	TableName: tableName,
