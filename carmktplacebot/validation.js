@@ -177,6 +177,10 @@ module.exports.validateCarDetails = function (carBrandName,
                                           'Choose one of the options below',
                                           true);      
           }
+          if(imageUpload === 'Y')
+          {
+              //Rajat bhai ker de
+          }
       }
       return buildValidationResult(true, null, null,null,null,null);
 }

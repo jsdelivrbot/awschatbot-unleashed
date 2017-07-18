@@ -35,21 +35,19 @@ module.exports = function (securityToken,
         console.log(`Channel id is ${response.channel.id}`);
         let now = new Date();
         let auctionCreateDate = date.format(now,'YYYY-MM-DD');
-        let tempAuctionExpiryDate = auctionCreateDate.addDays(now,numberofDays);
+        let tempAuctionExpiryDate = date.addDays(now,numberofDays);
         let auctionExpiryDate = date.format(tempAuctionExpiryDate,'YYYY-MM-DD');
         //Need to fetch the S3 URL and append in the message below
         //RAJAT RATEWAL
 
-        return databaseManager.checkImageUpload(uniqueReferenceNumber).then(response => {
+        return databaseManager.checkImageUpload(uniqueReferenceNumber).then(imageImploadResponse => {
                 console.log('Bid Reference Passed:' + uniqueReferenceNumber);
-                var filenames='';
-                response.Items.forEach(function(item) {
-                          console.log(" -", item.filename);
-                          filenames+=item.filename + ";";
+                var filenames='\r\n';
+                imageImploadResponse.Items.forEach(function(item) {
+                          console.log("Files are -", item.filename);
+                          filenames += item.filename + "\r\n";
                 });
-
-            
-                 var message = "For you as a valued Dealer, we have a another good vehicle up for sale. \r\n Here are the required details:\r\n" +
+                var message = "For you as a valued Dealer, we have a another good vehicle up for sale. \r\n Here are the required details:\r\n" +
                       ">>> Car Brand : *" + carBrandName + "*" + "\r\n" +
                       "Car Model : *" + carModel + "*" + "\r\n" +
                       "Car Variant : *" + carVariant + "*" + "\r\n" +
@@ -64,7 +62,7 @@ module.exports = function (securityToken,
                       "Auction Expiry Date: *" + auctionExpiryDate + "*" + "\r\n" +
                       "Use the following reference number to bid for the vehicle *" + uniqueReferenceNumber + "*" + "\r\n" +
                       "You can view images of the Car at following links:" + filenames;
-                  inviteDealers(securityToken,response.channel.id,message);  
+                       inviteDealers(securityToken,response.channel.id,message);  
                 });
 
        
