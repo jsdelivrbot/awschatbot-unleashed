@@ -27,7 +27,22 @@ does not have issues
 </CORSConfiguration>
 
 ```
+Also add this as Buket Policy for object access publicily
 
+{
+	"Version": "2008-10-17",
+	"Statement": [
+		{
+			"Sid": "AllowPublicRead",
+			"Effect": "Allow",
+			"Principal": {
+				"AWS": "*"
+			},
+			"Action": "s3:GetObject",
+			"Resource": "arn:aws:s3:::awschatbotimagehostnew/*"
+		}
+	]
+}
 ## Running Locally
 
 
