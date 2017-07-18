@@ -1,3 +1,9 @@
+## AWS ChatBot Powered By Lex
+This bot is built as part of [AWS Hackathon](https://awschatbot2017.devpost.com). For more details please refer the link.
+
+Use Case: A Markeplace to sell second hand items in this case this bot helps you sell your second hand car. Powered by AWS Lambda and Lex.
+
+
 ## Pre-requisites
 
 1. Node.js `v4.3.0` or later. [Download](https://nodejs.org/en/download/)
