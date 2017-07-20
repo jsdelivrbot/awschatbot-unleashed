@@ -80,7 +80,7 @@ function processRequest(bidRef,userId) {
             var counter = 0;
             response.Items.forEach(function(item) {
                 counter++;
-                message3 +=  counter + '. Dealer Reference - *' + item.dealer_name + '* Bid Amount is - *INR.' + item.bid_amount + '*' + '\r\n \r\n';
+                message3 +=  counter + '. Dealer Reference - *' + item.dealer_name + '* Bid Amount is - *INR.' + item.bid_amount + '*' + '\r\n';
             });
             if(counter > 0)
             { 

@@ -32,8 +32,9 @@ module.exports = function (securityToken,
 
         let now = new Date();
         let auctionCreateDate = date.format(now,'YYYY-MM-DD');
-        let tempAuctionExpiryDate = date.addDays(now,numberofDays);
+        let tempAuctionExpiryDate = date.addDays(now,parseInt(numberofDays));
         let auctionExpiryDate = date.format(tempAuctionExpiryDate,'YYYY-MM-DD');
+
         return databaseManager.checkImageUpload(uniqueReferenceNumber).then(imageImploadResponse => {
               
                 var filenames='';
@@ -55,9 +56,12 @@ module.exports = function (securityToken,
                       "Auction Creation Date : *" + auctionCreateDate + "*" + "\r\n" +
                       "Auction Expiry Date: *" + auctionExpiryDate + "*" + "\r\n" +
                       "Use the following reference number to bid for the vehicle *" + uniqueReferenceNumber + "*" + "\r\n" +
-                      "To submit your bid type */bidforcar <amount> <bid reference> e.g. /bidforcar 600000 " + uniqueReferenceNumber + "*" + "\r\n" +
-                      "You can view images of the Car at following links: \r\n" + filenames;
-                       inviteDealers(securityToken,response.channel.id,message);  
+                      "To submit your bid type */bidforcar <amount> <bid reference> e.g. /bidforcar 600000 " + uniqueReferenceNumber + "*" + "\r\n";
+                      if(filenames !== '')
+                      {       
+                        message += "You can view images of the Car at following links: \r\n" + filenames;
+                      }    
+                      inviteDealers(securityToken,response.channel.id,message);  
                 });
 
        

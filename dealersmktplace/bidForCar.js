@@ -31,7 +31,7 @@ function acceptBid(request) {
               "attachments": [
         				{
             			 "color": "#ed0707",
-	        				 "text" : "You bid was not accepted as the format of your bid was incorrect \n send your bid the following format /bidcar <numeric value> <bid reference> \n e.g. /bidcar 200000 SDFsdsf234"
+	        				 "text" : "You bid was not accepted as the format of your bid was incorrect :heavy_exclamation_mark: \n send your bid the following format /bidcar <numeric value> <bid reference> \n e.g. /bidcar 200000 SDFsdsf234"
         				}
     				]
             }),
@@ -71,7 +71,7 @@ function acceptBid(request) {
                                 "attachments": [
                                     {
                                       "color": "#36a64f",
-                                      "text": "Cool :smile: Your Bid for Car reference : " + array[1] + " for INR. " + array[0] + " has been recorded successfully for seller to look at. \n \n Expect a reply if seller is interested. \n \n In case you like to bid again you are allowed until bid is closed."
+                                      "text": "Cool :smile: Your Bid for Car reference : " + array[1] + " for INR. " + array[0] + " has been recorded successfully for seller to look at :metal:. \n \n Expect a reply if seller is interested. \n \n In case you like to bid again you are allowed until bid is closed."
                                     }
                 ]
                             }),
