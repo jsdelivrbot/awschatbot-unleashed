@@ -32,6 +32,7 @@ provider:
         - "Fn::Join": ["", ["arn:aws:dynamodb:", {"Ref": "AWS::Region"}, ":", {"Ref": "AWS::AccountId"}, ":table/car-bid-details*"]]
         - "Fn::Join": ["", ["arn:aws:dynamodb:", {"Ref": "AWS::Region"}, ":", {"Ref": "AWS::AccountId"}, ":table/dealer-market-place-tokens*"]]
         - "Fn::Join": ["", ["arn:aws:dynamodb:", {"Ref": "AWS::Region"}, ":", {"Ref": "AWS::AccountId"}, ":table/bid-master-images*"]]
+		- "Fn::Join": ["", ["arn:aws:dynamodb:", {"Ref": "AWS::Region"}, ":", {"Ref": "AWS::AccountId"}, ":table/channel-details*"]]
   memorySize: 512
   environment:
     SLACK_CLIENT_ID: "xxxxxxxxxxxxxxxxxxxxxxxxx"
@@ -152,8 +153,6 @@ resources:
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1
        TableName: "car-bid-master"
-       StreamSpecification:
-          StreamViewType: NEW_IMAGE   
   CarBidDetailsTable:
      Type: AWS::DynamoDB::Table
      Properties:
@@ -204,4 +203,18 @@ resources:
        ProvisionedThroughput:
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1
-       TableName: "bid-master-images"         
+       TableName: "bid-master-images"   
+  SlackChannelDetails:
+     Type: AWS::DynamoDB::Table
+     Properties:
+       AttributeDefinitions:
+        - AttributeName: "channel_id"
+          AttributeType: "S"
+	   KeySchema:
+        - AttributeName: "channel_id"
+          KeyType: "HASH"
+	   ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+       TableName: "channel-details"
+  
