@@ -110,6 +110,11 @@ module.exports.buildOptions = function(forSlot)
           { text: 'Have No Images', value: 'N'},
       ];
     }
+    else if (forSlot === "InterestedInBid")
+    {
+      return [
+          { text: 'Yes I like a Bid and Discuss Further', value: 'Y'},
+          { text: 'Not Interested, Will wait for More Bids', value: 'N'},
+      ];
+    }
 }
-
-
