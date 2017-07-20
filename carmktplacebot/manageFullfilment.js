@@ -22,7 +22,7 @@ module.exports = function(intentRequest) {
   var userId = intentRequest.userId;
   var sessionAttributes = intentRequest.sessionAttributes;
   return createCarBid(userId,
-                      carBrandName, 
+                      carBrandName,
                       carModel,
                       carYearOfMake,
                       carVariant,
@@ -35,7 +35,7 @@ module.exports = function(intentRequest) {
                       numberofDays,
                       emailAddress,
                       sessionAttributes).then(fullfiledOrder => {
-            sessionAttributes = {};              
+            sessionAttributes = {};
     return lexResponses.close(sessionAttributes,
                               fullfiledOrder.fullfilmentState,
                               fullfiledOrder.message);
@@ -47,7 +47,7 @@ function createCarBid(userId,carBrandName,carModel,
                       maximumSellingPrice,
                       numberofDays,emailAddress,
                       sessionAttributes) {
-  
+
   var uniqueReferenceNumber = sessionAttributes.uniqueReferenceNumber;
   return databaseManager.createCarBid(userId,carBrandName,carModel,
                                       carYearOfMake,carVariant,carKmDriven,
@@ -69,7 +69,7 @@ function createCarBid(userId,carBrandName,carModel,
                         shortDescription,
                         maximumSellingPrice,
                         numberofDays);
-      var message = `Thanks, Your Car ${carBrandName} ${carModel} ${carYearOfMake} has been put up for bid. \r\n \r\n Please quote the following reference number to know the status of your bid: *${uniqueReferenceNumber}*`
+      var message = `Thanks, Your Car ${carBrandName} ${carModel} ${carYearOfMake} has been put up for bid :bell: . \r\n Please quote the reference number *${uniqueReferenceNumber}* :pushpin: to know Bids against your Car`;
       return lexResponses.buildFulfilmentResult('Fulfilled', message);
   });
 }
@@ -78,10 +78,10 @@ function createBidChannel(dealerMarketPlaceResponse,channelName,uniqueReferenceN
                             carKmDriven,carColor,numberOfOwners,carCity,
                             shortDescription,maximumSellingPrice,
                             numberofDays){
-    
+
     /*
     * We may have multiple Dealer Market Places hence it will create channels on all the Dealer Market places
-    * Multiple Dealer Market Places are only possible when multiple slack teams have installed Dealer MarketPlace app 
+    * Multiple Dealer Market Places are only possible when multiple slack teams have installed Dealer MarketPlace app
     */
     dealerMarketPlaceResponse.Items.forEach(function(item) {
         slackChannelFactory(item.security_token,
