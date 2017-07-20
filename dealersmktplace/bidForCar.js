@@ -7,7 +7,7 @@ const databaseManager = require('../databaseManager');
 
 module.exports = function (event) {
    return acceptBid(qs.parse(event.body));
-} 
+}
 function acceptBid(request) {
   try{
       var verificationToken = 'xxxxxxxxxxxxxxxxxxxxxxxxx';
@@ -27,60 +27,78 @@ function acceptBid(request) {
           const response = {
             statusCode: 200,
             body: JSON.stringify({
-              "message" : '*There is issue with your bid: ' + request.text + '*',
+              "message" : 'There is issue with your bid',
               "attachments": [
         				{
             			 "color": "#ed0707",
-	        				 "text" : "You bid was not accepted as the format of your bid was incorrect :heavy_exclamation_mark: \n send your bid the following format /bidcar <numeric value> <bid reference> \n e.g. /bidcar 200000 SDFsdsf234"
+	        				 "text" : "You bid was not accepted as the format of your bid was incorrect :heavy_exclamation_mark: \n Send your bid in the following format /bidforcar <numeric value> <bid reference> \n e.g. /bidcar 200000 ds57jwzgf7"
         				}
     				]
             }),
           };
-          return Promise.resolve(response);  
+          return Promise.resolve(response);
       }
       else {
       		var bidReference = array[1];
       		var dealerName = request.user_name;
       		var dealerSlackId = request.user_id;
       		var bidAmount = array[0];
-
-          return checkAuctionValidity(bidReference).then((getBidDetails)=>{
-              if(getBidDetails.Item.is_active === 'N')
+          return checkValidBidReference(bidReference).then(response => {
+              if(response.toLowerCase() === 'n')
               {
                   const response = {
                         statusCode: 200,
                         body: JSON.stringify({
-                        "message": 'Sorry, Bid for The Car is already closed',
+                        "message": 'There is no such Bid Rerence number',
                         "attachments": [
                             {
                               "color": "#ed0707",
-                              "text": "Thanks for showing interest however we cannot process this bid now :heavy_exclamation_mark: as this auction has already been expired, against Bid Reference *" + bidReference + "*"
+                              "text": ":heavy_exclamation_mark: " + bidReference + " is not a valid Bid reference number. \r\n Kindly check if you entered it correctly. \r\n Try again with valid Bid reference number  :point_up:"
                             }
                           ]
                         }),
                    };
                    return Promise.resolve(response);
-               }
-               else
-               {
-                    return recordBidSubmission(bidReference,dealerName,dealerSlackId,bidAmount).then(() =>{
-                        const response = {
-                            statusCode: 200,
-                            body: JSON.stringify({
-                                "message": 'Bid for The Car is:' + request['text'] + ' posted by user:' + request['user_name'] + ' in Channel:' + request['channel_name'],
+              }
+              else {
+                  return checkAuctionValidity(bidReference).then((getBidDetails)=>{
+                      if(getBidDetails.Item.is_active.toLowerCase() === 'n')
+                      {
+                          const response = {
+                                statusCode: 200,
+                                body: JSON.stringify({
+                                "message": 'Sorry, Bid for The Car is already closed',
                                 "attachments": [
                                     {
-                                      "color": "#36a64f",
-                                      "text": "Cool :smile: Your Bid for Car reference : " + array[1] + " for INR. " + array[0] + " has been recorded successfully for seller to look at :metal:. \n \n Expect a reply if seller is interested. \n \n In case you like to bid again you are allowed until bid is closed."
+                                      "color": "#ed0707",
+                                      "text": "Thanks for showing interest however we cannot process this bid now :heavy_exclamation_mark: \r\n as this auction has already been expired against Bid Reference " + bidReference
                                     }
-                ]
-                            }),
-                        };
-                        return Promise.resolve(response);
-                    });
-               }
-          });
-
+                                  ]
+                                }),
+                           };
+                           return Promise.resolve(response);
+                       }
+                       else
+                       {
+                            return recordBidSubmission(bidReference,dealerName,dealerSlackId,bidAmount).then(() =>{
+                                const response = {
+                                    statusCode: 200,
+                                    body: JSON.stringify({
+                                        "message": 'Bid for The Car is:' + request['text'] + ' posted by user:' + request['user_name'] + ' in Channel:' + request['channel_name'],
+                                        "attachments": [
+                                            {
+                                              "color": "#36a64f",
+                                              "text": "Cool :smile: Your Bid has been submitted successfully  :clap: \r\n \r\n Bid Reference : " + array[1] + " \r\n Your Bid INR. " + array[0] + "\r\n We will inform you by sending a Direct Message if seller is interested in your Bid. \r\n\r\n Please note - You can resubmit your Bid whie Auction is live."
+                                            }
+                        ]
+                                    }),
+                                };
+                                return Promise.resolve(response);
+                            });
+                       }
+                  });
+                }
+        });
       	/*	return recordBidSubmission(bidReference,dealerName,dealerSlackId,bidAmount).then(() =>{
       			const response = {
               				statusCode: 200,
@@ -96,16 +114,18 @@ function acceptBid(request) {
           		};
           		return Promise.resolve(response);
       		});*/
-      		
+
       }
   }catch(err) {
       Promise.reject(err);
   }
 };
+function checkValidBidReference(bidReference){
+  return databaseManager.checkValidBidReference(bidReference);
+}
 function recordBidSubmission(bidReference,dealerName,dealerSlackId,bidAmount){
 	return databaseManager.recordBidSubmission(bidReference,dealerName,dealerSlackId,bidAmount);
 }
-
 function checkAuctionValidity(bidReference){
   return databaseManager.checkValidityOfAuction(bidReference);
 }
