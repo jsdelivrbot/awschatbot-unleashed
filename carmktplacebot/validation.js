@@ -18,8 +18,8 @@ module.exports = function (carBrandName,
                               emailAddress,
                               imageUpload,
                               uniqueReferenceNumber) {
-     const carBrandNames = ['nissan', 'ford', 'jaguar', 'fiat', 'general motors', 'mahindra', 'bentley','bmw','mitsubishi','mazda','bugatti','buick','jeep','renault','datsun','acura','aston martin','maruti suzuki','tata','hyundai','isuzu','suzuki','honda','alfa romeo','audi','mercedes-benz','toyota'];
-     const carKmDrivenValues = ['0-5000','5000 - 20000','20000 - 50000','50000 - 200000','More than 200000']; 
+     const carBrandNames = ['nissan', 'ford', 'jaguar', 'fiat', 'general motors', 'bentley','bmw','mitsubishi','mazda','renault','datsun','hyundai','isuzu','audi','mercedes-benz','toyota'];
+     const carKmDrivenValues = ['0-5000','5000 - 20000','20000 - 50000','50000 - 200000','More than 200000'];
      if(carBrandName)
      {
         var isCarBrandCarValid = carBrandNames.includes(carBrandName.toLowerCase());
@@ -37,7 +37,7 @@ module.exports = function (carBrandName,
               carBrandName = _.startCase(_.toLower(carBrandName));
               return Promise.resolve(buildValidationResult(false,
                                            'CarBrandName',
-                                           `Kindly note *${carBrandName}* is not in our list. pls check if your *Car Brand* exist in the list below as we only deal in the following *Car Brands* ${concatString}`,
+                                           `Wish I could help but *${carBrandName}* is not in my list. If your car is of one of brands below I can create an auction for your car *Car Brands* ${concatString}`,
                                            null,
                                            null,
                                            false));
@@ -58,7 +58,7 @@ module.exports = function (carBrandName,
         var current_year = new Date().getFullYear();
         if(carYearOfMake > current_year)
         {
-          return Promise.resolve(buildValidationResult(false, 
+          return Promise.resolve(buildValidationResult(false,
                                         'CarYearOfMake',
                                         `Please check seems you have mistakenly entered a future year ${carYearOfMake}, kindly provide the correct Year of Make`,
                                         null,
@@ -67,9 +67,9 @@ module.exports = function (carBrandName,
         }
         if(carYearOfMake < 2000)
         {
-            return Promise.resolve(buildValidationResult(false, 
+            return Promise.resolve(buildValidationResult(false,
                                         'CarYearOfMake',
-                                        `Dealer Market Place does not response well for Cars which has Year of Make earlier than 2000, pls check if the year entered was correct and then reenter`,
+                                        `Dealer Market Place does not respond well for Cars which have *Year of Make* before 2000  :see_no_evil: \r\n Pls check if the year entered was correct and try again`,
                                         null,
                                         null,
                                         false));
@@ -85,7 +85,7 @@ module.exports = function (carBrandName,
             {
                 if(carKmDriven <= 0)
                 {
-                  return Promise.resolve(buildValidationResult(false, 
+                  return Promise.resolve(buildValidationResult(false,
                                         'CarKmDriven',
                                         `I cannot take ${carKmDriven} as Car Kms Driven figure.\n Specify Car Kms Driven either by choosing one of the options below or mention exact Kms figure`,
                                         'Specify Car Km Driven',
@@ -95,7 +95,7 @@ module.exports = function (carBrandName,
             }
             else
             {
-              return Promise.resolve(buildValidationResult(false, 
+              return Promise.resolve(buildValidationResult(false,
                                         'CarKmDriven',
                                         `I cannot take ${carKmDriven} as Car Kms Driven figure.\n Specify Car Kms Driven either by choosing one of the options below or mention exact Kms figure`,
                                         'Specify Car Km Driven',
@@ -106,107 +106,107 @@ module.exports = function (carBrandName,
       }
       if(numberOfOwners)
       {
-         var isNumericFlag = isNumeric(numberOfOwners); 
+         var isNumericFlag = isNumeric(numberOfOwners);
          if(!isNumericFlag)
          {
-              return Promise.resolve(buildValidationResult(false, 
+              return Promise.resolve(buildValidationResult(false,
                                           'NumberOfOwners',
                                           `Number of Owners has to be one of the values mentioned below or specify a number in the message box below`,
                                           'Specify Car Number of Owners',
                                           'Choose one of the options or mention number in the message box below',
-                                          true));      
+                                          true));
          }
          else
          {
-            var isNumberOfOwnersValid = numberOfOwners > 0  && numberOfOwners <= 3; 
+            var isNumberOfOwnersValid = numberOfOwners > 0  && numberOfOwners <= 3;
             if(!isNumberOfOwnersValid)
             {
-                return Promise.resolve(buildValidationResult(false, 
+                return Promise.resolve(buildValidationResult(false,
                                           'NumberOfOwners',
                                           `Number of Owners has to be one of the values mentioned below or specify a number in the message box below`,
                                           'Specify Car Number of Owners',
                                           'Choose one of the options or mention number in the message box below',
-                                          true));          
+                                          true));
             }
          }
       }
       if(numberofDays)
       {
-          var isAuctionExpireFlag = isNumeric(numberofDays); 
+          var isAuctionExpireFlag = isNumeric(numberofDays);
           if(!isAuctionExpireFlag)
           {
-             return Promise.resolve(buildValidationResult(false, 
+             return Promise.resolve(buildValidationResult(false,
                                           'NumberOfDays',
                                           'Days for Auction Expire has to be one of the values mentioned below',
                                           'Specify Days for Auction Expire',
                                           'Choose one of the options below',
-                                          true));      
+                                          true));
           }
           if(numberofDays < 3  || numberofDays > 5)
           {
-                return Promise.resolve(buildValidationResult(false, 
+                return Promise.resolve(buildValidationResult(false,
                                           'NumberOfDays',
                                           'Days for Auction Expire has to be one of the values mentioned below',
                                           'Specify Days for Auction Expire',
                                           'Choose one of the options below',
-                                          true));      
-          }         
+                                          true));
+          }
       }
       if(emailAddress)
       {
           var localEmailAddress = emailAddress.substring(emailAddress.indexOf("|") + 1);
-          var isValidEmailId = validator.isEmail(localEmailAddress); 
+          var isValidEmailId = validator.isEmail(localEmailAddress);
           if(!isValidEmailId)
           {
-              return Promise.resolve(buildValidationResult(false, 
+              return Promise.resolve(buildValidationResult(false,
                                           'EmailAddress',
                                           'Please check your Email Address again',
                                           null,
                                           null,
-                                          false));      
+                                          false));
           }
       }
       if(imageUpload)
       {
-          
+
           if(imageUpload !== 'N' && imageUpload !== 'Y')
           {
-              return Promise.resolve(buildValidationResult(false, 
+              return Promise.resolve(buildValidationResult(false,
                                           'ImageUpload',
                                           'Sorry could not understand your reply. Pls note *Post Upload* images click on *Have Uploaded* or *Have No Images* if you don not want',
                                           'Specify your input by selecting an option below',
                                           'Choose one of the options below',
-                                          true));      
+                                          true));
           }
           if(imageUpload === 'Y')
           {
-                
+
                 return databaseManager.checkImageUpload(uniqueReferenceNumber).then(imageImploadResponse => {
 
                 if(imageImploadResponse.Count === 0){
                     console.log('Image Count is 0 hence creating creating validtion result with false');
-                  return Promise.resolve(buildValidationResult(false, 
+                  return Promise.resolve(buildValidationResult(false,
                                           'ImageUpload',
                                           'I could not find any images, pls repond appropriately. Use the following URL to upload images https://marketplaceimages.herokuapp.com/',
                                           'Specify your input by selecting an option below',
                                           'Choose one of the options below',
-                                          true));   
+                                          true));
 
                 }
-                else {  
-                        return Promise.resolve(buildValidationResult(true, 
+                else {
+                        return Promise.resolve(buildValidationResult(true,
                                                     null,
                                                     null,
                                                     null,
                                                     null,
-                                                    null));   
+                                                    null));
                     }
             });
         }
       }
       return Promise.resolve(buildValidationResult(true, null, null,null,null,null));
 }
-function buildValidationResult(isValid, violatedSlot, messageContent, 
+function buildValidationResult(isValid, violatedSlot, messageContent,
                                 responseCardTitle, responseCarSubtitle,isResponseCardRequired)
 {
   if (messageContent === null) {
