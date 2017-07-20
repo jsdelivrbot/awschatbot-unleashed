@@ -18,6 +18,10 @@ module.exports = function (securityToken,
                             shortDescription,
                             maximumSellingPrice,
                             numberofDays){
+    let now = new Date();
+    let auctionCreateDate = date.format(now,'YYYY-MM-DD');
+    let tempAuctionExpiryDate = date.addDays(now,parseInt(numberofDays));
+    let auctionExpiryDate = date.format(tempAuctionExpiryDate,'YYYY-MM-DD');
     var url = "https://slack.com/api/channels.create";
     var options = {
       method: 'POST',
@@ -29,42 +33,38 @@ module.exports = function (securityToken,
       json: true,
     };
     request(options).then((response) => {
-
-        let now = new Date();
-        let auctionCreateDate = date.format(now,'YYYY-MM-DD');
-        let tempAuctionExpiryDate = date.addDays(now,parseInt(numberofDays));
-        let auctionExpiryDate = date.format(tempAuctionExpiryDate,'YYYY-MM-DD');
-
-        return databaseManager.checkImageUpload(uniqueReferenceNumber).then(imageImploadResponse => {
-              
-                var filenames='';
-                imageImploadResponse.Items.forEach(function(item) {
-                          console.log("Files are -", item.filename);
+        var channelId = response.channel.id;
+        return databaseManager.createChannelDetailsRecord(channelId,auctionExpiryDate,uniqueReferenceNumber).then(() => {
+              return databaseManager.checkImageUpload(uniqueReferenceNumber).then(imageImploadResponse => {
+                      var filenames='';
+                      imageImploadResponse.Items.forEach(function(item) {
                           filenames += item.filename + "\r\n";
-                });
-                var message = "For you as a valued Dealer, we have a another good vehicle up for sale. \r\n Here are the required details:\r\n" +
-                      ">>> Car Brand : *" + carBrandName + "*" + "\r\n" +
-                      "Car Model : *" + carModel + "*" + "\r\n" +
-                      "Car Variant : *" + carVariant + "*" + "\r\n" +
-                      "Car Color : *" + carColor + "*" + "\r\n" +
-                      "Year of Make : *" + carYearOfMake + "*" + "\r\n" +
-                      "Kms Driven : *" + carKmDriven + "*" + "\r\n" + 
-                      "Expected Price: *INR." + maximumSellingPrice + "*" + "\r\n" +
-                      "No.of people who have owned your car : *" + numberOfOwners + "*" + "\r\n" + 
-                      "Short shortDescription about the Vehicle : *" + shortDescription + "*" + "\r\n" +
-                      "Car available in City : *" + carCity + "*" + "\r\n" + 
-                      "Auction Creation Date : *" + auctionCreateDate + "*" + "\r\n" +
-                      "Auction Expiry Date: *" + auctionExpiryDate + "*" + "\r\n" +
-                      "Use the following reference number to bid for the vehicle *" + uniqueReferenceNumber + "*" + "\r\n" +
-                      "To submit your bid type */bidforcar <amount> <bid reference> e.g. /bidforcar 600000 " + uniqueReferenceNumber + "*" + "\r\n";
-                      if(filenames !== '')
-                      {       
-                        message += "You can view images of the Car at following links: \r\n" + filenames;
-                      }    
-                      inviteDealers(securityToken,response.channel.id,message);  
-                });
-
-       
+                      });
+                      var message = "This message is from *MarketPlace Bot* and since you are a registered used Cars Dealer, you are getting this msg \r\n" +
+                            ":star2: There is new Car up for sale in Dealers Market Place, seems like a great deal so hurry up in submitting your bid to grab the opportunity.\r\n \r\n" +
+                            "Here are the required details:\r\n" +
+                            ">>> Car Brand : *" + carBrandName + "*" + "\r\n" +
+                            "Car Model : *" + carModel + "*" + "\r\n" +
+                            "Car Variant : *" + carVariant + "*" + "\r\n" +
+                            "Car Color : *" + carColor + "*" + "\r\n" +
+                            "Year of Make : *" + carYearOfMake + "*" + "\r\n" +
+                            "Kms Driven : *" + carKmDriven + "*" + "\r\n" +
+                            "Expected Price: *INR." + maximumSellingPrice + "*" + "\r\n" +
+                            "No.of people who have owned your car : *" + numberOfOwners + "*" + "\r\n" +
+                            "Short shortDescription about the Vehicle : *" + shortDescription + "*" + "\r\n" +
+                            "Car available in City : *" + carCity + "*" + "\r\n" +
+                            "Auction Creation Date : *" + auctionCreateDate + "*" + "\r\n" +
+                            "Auction Expiry Date: *" + auctionExpiryDate + "*" + "\r\n \r\n" +
+                            "Use the following reference number to bid for the vehicle *" + uniqueReferenceNumber + "*" + "\r\n" +
+                            "To submit your bid type type the following command in the message box \r\n" +
+                            "*/bidforcar <amount> <bid reference> e.g. /bidforcar 600000 " + uniqueReferenceNumber + "*" + "\r\n";
+                            if(filenames !== '')
+                            {
+                              message += "\r\n You can view images of the Car at following links: \r\n" + filenames;
+                            }
+                            inviteDealers(securityToken,response.channel.id,message);
+              });
+          });
     }).catch(function(error){
         console.log('inside the catch block with error ' + error);
     });
