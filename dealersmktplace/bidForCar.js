@@ -31,7 +31,7 @@ function acceptBid(request) {
               "attachments": [
         				{
             			 "color": "#ed0707",
-	        				 "text" : "You bid was not accepted as the format of your bid was incorrect :heavy_exclamation_mark: \n Send your bid in the following format /bidforcar <numeric value> <bid reference> \n e.g. /bidcar 200000 ds57jwzgf7"
+	        				 "text" : "You bid was not accepted as the format of your bid was incorrect :heavy_exclamation_mark: \n Send your bid in the following format /bidforcar <numeric value> <bid reference> \n e.g. /bidforcar 200000 ds57jwzgf7"
         				}
     				]
             }),
