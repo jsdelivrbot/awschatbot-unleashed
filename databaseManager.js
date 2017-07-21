@@ -112,7 +112,7 @@ module.exports.checkImageUpload = function(uniqueReferenceNumber) {
 		      console.log(`================No images found in the database uniqueReferenceNumber ${uniqueReferenceNumber}`);
 		      return Promise.reject(new Error(`No images found in the database uniqueReferenceNumber ${uniqueReferenceNumber}`));
 		    }
-	    	console.log(`Found image record for refernce Number : ${response}`);
+	    	console.log(`Found image record for refernce Number : ${JSON.stringify(response)}`);
 	    	return response;
 	  	});
 };

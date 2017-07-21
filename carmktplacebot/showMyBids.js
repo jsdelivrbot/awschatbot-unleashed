@@ -98,15 +98,20 @@ module.exports = function(intentRequest) {
      }
      if (source === 'FulfillmentCodeHook')
      {
-          /* return slackController(bidRef,dealerRef).then((dealerSlackIdResponse) =>{
+           return slackController(bidRef,dealerRef).then((dealerSlackIdResponse) =>{
                 console.log('AFTER SENDING DIRECT message to DEALER888888888888888888888');
                 console.log(`Am I able to find the Dealer for Direct Message ${JSON.stringify(dealerSlackIdResponse)}`);
-           });*/
-           var message = `Thanks, I have informed the *${dealerRef}* about your interest  :sparkles: :sparkles:. You should expect a communication from them soon :clap: \r\n Have a Great Day! ahead and bye for now`;
+                var message = `Thanks, I have informed the *${dealerRef}* about your interest  :sparkles: :sparkles:. You should expect a communication from them soon :clap: \r\n Have a Great Day! ahead and bye for now`;
+                var fullfiledOrder = lexResponses.buildFulfilmentResult('Fulfilled', message);
+                return Promise.resolve(lexResponses.close(sessionAttributes,
+                                    fullfiledOrder.fullfilmentState,
+                                    fullfiledOrder.message));
+           });
+           /*var message = `Thanks, I have informed the *${dealerRef}* about your interest  :sparkles: :sparkles:. You should expect a communication from them soon :clap: \r\n Have a Great Day! ahead and bye for now`;
            var fullfiledOrder = lexResponses.buildFulfilmentResult('Fulfilled', message);
            return Promise.resolve(lexResponses.close(sessionAttributes,
                                     fullfiledOrder.fullfilmentState,
-                                    fullfiledOrder.message));
+                                    fullfiledOrder.message));*/
      }
 };
 function processRequest(bidRef,userId) {

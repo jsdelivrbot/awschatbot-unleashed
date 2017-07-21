@@ -182,7 +182,7 @@ module.exports = function (carBrandName,
           {
 
                 return databaseManager.checkImageUpload(uniqueReferenceNumber).then(imageImploadResponse => {
-
+                  
                 if(imageImploadResponse.Count === 0){
                     console.log('Image Count is 0 hence creating creating validtion result with false');
                   return Promise.resolve(buildValidationResult(false,

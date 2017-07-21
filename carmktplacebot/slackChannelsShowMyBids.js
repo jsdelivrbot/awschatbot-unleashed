@@ -28,7 +28,7 @@ module.exports = function (bidRef,dealer_name) {
         return databaseManager.getSlackTeamSecurityToken().then(securityTokenResponse => {
             console.log(`Car Market Place security Token is ${JSON.stringify(securityTokenResponse)}`);
             console.log(`Here is the security toke ${securityTokenResponse.Items[0].security_token}`);
-            var securityToken = securityTokenResponse.Items.security_token
+            var securityToken = securityTokenResponse.Items[0].security_token
             var url = "https://slack.com/api/im.list";
             var options = {
               method: 'POST',
@@ -44,10 +44,15 @@ module.exports = function (bidRef,dealer_name) {
                 console.log(`here are the ims ${JSON.stringify(response)}`);
                 console.log(`I am going to check if ${dealerSlackId} exist in ims or not`);
                 var ims = response.ims;
+                console.log(`Response.ims are ${JSON.stringify(ims)}`);
                 for( im in ims)
                 {
+                    console.log('inside for loop');
                     imID = im.id;
                     imUser = im.user;
+                    console.log(`inside for loop imID is ${imID}`);
+                    console.log(`inside for loop isUser is ${imUser}`);
+                    console.log(`inside for loop dealerSlackId is ${dealerSlackId}`);
                     if(imUser === dealerSlackId)
                     {
                       console.log('Hurrayyyyyyyyyyyyyyyyy fdound the match');
