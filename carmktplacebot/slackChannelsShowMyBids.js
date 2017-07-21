@@ -6,60 +6,58 @@ const databaseManager = require('../databaseManager');
 const _ = require('lodash');
 
 module.exports = function (bidRef,dealer_name) {
-  return databaseManager.validateBidRefAndDealerRef(bidRef,dealer_name).then(response => {
-        console.log(`Inside slackChannelsShowMyBids and the response I have recieved is ${JSON.stringify(response)}`);
-        var dealerSlackIdResponse = {};
-        var dealerSlackId;
-        if (_.isEmpty(response)) {
-          dealerSlackIdResponse.isValid = 'n';
-          return Promise.resolve(dealerSlackIdResponse);
-        }
-        response.Items.forEach(function(item) {
-             if(item.dealer_name === dealer_name)
-             {
-                dealerSlackId = item.dealer_reference;
-                return false;
-             }
-        });
-        dealerSlackIdResponse.isValid = 'y';
-        dealerSlackIdResponse.dealer_reference = dealerSlackId
-        console.log(`I have been able to find the dealer stack reference ${JSON.stringify(dealerSlackIdResponse)}`);
 
-        return databaseManager.getSlackTeamSecurityToken().then(securityTokenResponse => {
-            console.log(`Car Market Place security Token is ${JSON.stringify(securityTokenResponse)}`);
-            console.log(`Here is the security toke ${securityTokenResponse.Items[0].security_token}`);
-            var securityToken = securityTokenResponse.Items[0].security_token
-            var url = "https://slack.com/api/im.list";
+  console.log('Calling getCarBidDetails in Slack Factory');
+  //getCarBidMaster(bidRef);
+  //return databaseManager.getCarBidDetail(bidRef,dealer_name).then(response => {
+  //  console.log(`CarBidDetai is ${JSON.stringify(response)}`);
+  return databaseManager.getSlackTeamSecurityToken().then(securityTokenResponse => {
+        var securityToken = securityTokenResponse.Items[0].security_token
+        var url = "https://slack.com/api/im.list";
+        var options = {
+          method: 'POST',
+          uri: url,
+          form : {
+            token : securityToken
+          },
+          json: true,
+        };
+        var imID;
+        var imUser;
+        request(options).then((response) => {
+            console.log(`here are the ims ${JSON.stringify(response)}`);
+            console.log(`I am going to check if ${dealerSlackId} exist in ims or not`);
+            var ims = response.ims;
+            console.log(`Response.ims are ${JSON.stringify(ims)}`);
+            var channelId;
+            for(i in ims)
+            {
+                imID = ims[i].id;
+                imUser = ims[i].user;
+                if(imUser === dealerSlackId)
+                {
+                  channelId = imID;
+                  break;
+                }
+            }
+            var url = "https://slack.com/api/chat.postMessage";
             var options = {
               method: 'POST',
               uri: url,
               form : {
-                token : securityToken
+                token : securityToken,
+                channel: channelId,
+                text: 'This is amazig feeling as you have got the confirmation from Car sell',
+                as_user: false,
+
               },
               json: true,
             };
-            var imID;
-            var imUser;
             request(options).then((response) => {
-                console.log(`here are the ims ${JSON.stringify(response)}`);
-                console.log(`I am going to check if ${dealerSlackId} exist in ims or not`);
-                var ims = response.ims;
-                console.log(`Response.ims are ${JSON.stringify(ims)}`);
-                for( im in ims)
-                {
-                    console.log('inside for loop');
-                    imID = im.id;
-                    imUser = im.user;
-                    console.log(`inside for loop imID is ${imID}`);
-                    console.log(`inside for loop isUser is ${imUser}`);
-                    console.log(`inside for loop dealerSlackId is ${dealerSlackId}`);
-                    if(imUser === dealerSlackId)
-                    {
-                      console.log('Hurrayyyyyyyyyyyyyyyyy fdound the match');
-                    }
-                }
-                return Promise.resolve('Hello world');
-             });
-          });//end of return get slacksecutirytoken
-        });//end of validateBidRefAndDealerRef
+                console.log(`After sending message to user the response is ${JSON.stringify(response)}`);
+                return Promise.resolve(`Hello world the channelId where message needs to be sent ${channelId}`);
+            });
+        });//end of 1st
+    });//end of 2nd
+  //  });
 }
