@@ -77,23 +77,31 @@ module.exports.createCarBid = function(userId,
 * combination is unique
 */
 module.exports.getCarBidDetail = function(bidRef,dealer_name){
-			const params = {
-			    TableName: 'car-bid-details',
-					IndexName: 'bid_reference-dealer_name-index',
-					KeyConditionExpression: "bid_reference = :b and dealer_name = :d",
-					ExpressionAttributeValues: {
-        			":b": bidRef,
-        			":d": dealer_name
-    			}
-		  };
+			
+			var table = 'car-bid-details';
+			var indexName = 'bid_reference-dealer_name-index';
+			var params = { 
+				TableName: table,
+ 				IndexName: indexName,
+ 				Key:{
+      				  "year": year,
+        			  "title": title
+    			},
+ 				KeyConditionExpression: 'bid_reference = :x and dealer_name = :y',
+ 				ExpressionAttributeValues: { 
+ 					':x': bidRef,
+ 					':y': dealer_name
+ 				} 
+			};
 			const getAsync = promisify(dynamo.get, dynamo);
 			return getAsync(params).then(response => {
-					if (_.isEmpty(response)) {
-							console.log(`record with bid reference ${bidRef} and dealer_name ${dealer_name} does not exist`);
-							return Promise.reject(new Error(`record with bid reference ${bidRef} and dealer_name ${dealer_name} does not exist`));
-					}
-					console.log(`Found Car bid details record ${JSON.stringify(response)}`);
-					return response;
+				console.log(`In GetCarBidDetail the response is ${JSON.stringify(response)}`);
+				if (_.isEmpty(response)) {
+						console.log(`record with bid reference ${bidRef} and dealer_name ${dealer_name} does not exist`);
+						return Promise.reject(new Error(`record with bid reference ${bidRef} and dealer_name ${dealer_name} does not exist`));
+				}
+				console.log(`Found Car bid details record ${JSON.stringify(response)}`);
+				return response;
 			});
 };
 /*

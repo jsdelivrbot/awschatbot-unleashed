@@ -54,7 +54,7 @@ function createCarBid(userId,carBrandName,carModel,
                                       carColor,numberOfOwners,carCity,
                                       shortDescription,uniqueReferenceNumber,
                                       maximumSellingPrice,numberofDays,emailAddress).then(dealerMarketPlaceResponse => {
-      var channelName = uniqueReferenceNumber + "_" + carBrandName + "_" + carModel;
+      var channelName = uniqueReferenceNumber;
       createBidChannel(dealerMarketPlaceResponse,
                         channelName,
                         uniqueReferenceNumber,

@@ -10,8 +10,8 @@ module.exports = function (bidRef,dealer_name) {
   console.log('Calling getCarBidDetails in Slack Factory');
   //getCarBidMaster(bidRef);
   //return databaseManager.getCarBidDetail(bidRef,dealer_name).then(response => {
-  //  console.log(`CarBidDetai is ${JSON.stringify(response)}`);
-  return databaseManager.getSlackTeamSecurityToken().then(securityTokenResponse => {
+   //   console.log(`CarBidDetai is ${JSON.stringify(response)}`);
+      return databaseManager.getSlackTeamSecurityToken().then(securityTokenResponse => {
         var securityToken = securityTokenResponse.Items[0].security_token
         var url = "https://slack.com/api/im.list";
         var options = {
@@ -59,5 +59,5 @@ module.exports = function (bidRef,dealer_name) {
             });
         });//end of 1st
     });//end of 2nd
-  //  });
+    //});
 }

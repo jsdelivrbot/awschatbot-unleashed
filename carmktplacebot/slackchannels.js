@@ -22,6 +22,7 @@ module.exports = function (securityToken,
     let auctionCreateDate = date.format(now,'YYYY-MM-DD');
     let tempAuctionExpiryDate = date.addDays(now,parseInt(numberofDays));
     let auctionExpiryDate = date.format(tempAuctionExpiryDate,'YYYY-MM-DD');
+    channelName += "-" + auctionExpiryDate;
     var url = "https://slack.com/api/channels.create";
     var options = {
       method: 'POST',
