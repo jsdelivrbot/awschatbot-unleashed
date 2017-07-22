@@ -5,20 +5,9 @@ const promisify = require('es6-promisify');
 const _ = require('lodash');
 const dynamo = new AWS.DynamoDB.DocumentClient();
 
-module.exports.createCarBid = function(userId,
-																			carBrandName,
-																			carModel,
-																			carYearOfMake,
-																			carVariant,
-																			carKmDriven,
-																			carColor,
-																			numberOfOwners,
-																			carCity,
-																			shortDescription,
-																			uniqueReferenceNumber,
-																			maximumSellingPrice,
-									                    numberofDays,
-									                    emailAddress) {
+module.exports.createCarBid = function(userId,carBrandName,carModel,carYearOfMake,carVariant,
+										carKmDriven,carColor,numberOfOwners,carCity,shortDescription,
+										uniqueReferenceNumber,maximumSellingPrice,numberofDays,emailAddress) {
 
 				const item = {};
 				item.carBrandName = carBrandName;
@@ -77,41 +66,48 @@ module.exports.createCarBid = function(userId,
 * combination is unique
 */
 module.exports.getCarBidDetail = function(bidRef,dealer_name){
-			
-			var table = 'car-bid-details';
-			var indexName = 'bid_reference-dealer_name-index';
-			var params = { 
-				TableName: table,
- 				IndexName: indexName,
- 				Key:{
-      				  "year": year,
-        			  "title": title
-    			},
- 				KeyConditionExpression: 'bid_reference = :x and dealer_name = :y',
- 				ExpressionAttributeValues: { 
- 					':x': bidRef,
- 					':y': dealer_name
- 				} 
-			};
-			const getAsync = promisify(dynamo.get, dynamo);
-			return getAsync(params).then(response => {
-				console.log(`In GetCarBidDetail the response is ${JSON.stringify(response)}`);
-				if (_.isEmpty(response)) {
-						console.log(`record with bid reference ${bidRef} and dealer_name ${dealer_name} does not exist`);
-						return Promise.reject(new Error(`record with bid reference ${bidRef} and dealer_name ${dealer_name} does not exist`));
-				}
-				console.log(`Found Car bid details record ${JSON.stringify(response)}`);
-				return response;
-			});
+	var table = 'car-bid-details';
+	var indexName = 'bid_reference-dealer_name-index';
+	var params = { 
+		TableName: table,
+		IndexName: indexName,
+		KeyConditionExpression: 'bid_reference = :x and dealer_name = :y',
+		ExpressionAttributeValues: { 
+			':x': bidRef,
+			':y': dealer_name
+		}
+	};
+	const getAsync = promisify(dynamo.query, dynamo);
+	return getAsync(params).then(response => {
+		console.log(`In GetCarBidDetail the response is ${JSON.stringify(response)}`);
+		if (_.isEmpty(response)) {
+			console.log(`record with bid reference ${bidRef} and dealer_name ${dealer_name} does not exist`);
+			return Promise.reject(new Error(`record with bid reference ${bidRef} and dealer_name ${dealer_name} does not exist`));
+		}
+		console.log(`Found Car bid details record ${JSON.stringify(response)}`);
+		return response;
+	});
 };
 /*
 * this methods returns the bid master record from car-bid-master for
 * a bid reference number. Return type is only one item as bid reference
 * unique in the table
 */
-/*module.exports.getCarBidMaster = function(bidRef){
-
-};*/
+module.exports.getCarBidMaster = function(bidRef){
+	const params = {
+	    TableName: 'car-bid-master',
+	    Key:{
+        	'bid_reference': bidRef
+        }
+  	};
+	const getAsync = promisify(dynamo.get, dynamo);
+	return getAsync(params).then(response => {
+		if (_.isEmpty(response)) {
+			return Promise.reject(new Error(`record with bid reference ${bidRef} does not exist in Bid Master`));
+		}
+		return Promise.resolve(response);
+	});
+};
 module.exports.findBids = function(bidRef) {
 		const params = {
 		    TableName: 'car-bid-details',
@@ -161,16 +157,16 @@ module.exports.checkImageUpload = function(uniqueReferenceNumber) {
 };
 module.exports.validateUserIdAndBidRef = function(bidRef,userId)
 {
-			const params = {
-			    TableName: 'car-bid-master',
-			    Key:{
-		        	'bid_reference': bidRef
-		        }
-		  	};
-			const getAsync = promisify(dynamo.get, dynamo);
-			return getAsync(params).then(response => {
-					return Promise.resolve(response);
-		  });
+	const params = {
+	    TableName: 'car-bid-master',
+	    Key:{
+        	'bid_reference': bidRef
+        }
+  	};
+	const getAsync = promisify(dynamo.get, dynamo);
+	return getAsync(params).then(response => {
+		return Promise.resolve(response);
+	});
 };
 module.exports.validateBidRefAndDealerRef = function(bidRef,dealerRef)
 {
@@ -180,7 +176,7 @@ module.exports.validateBidRefAndDealerRef = function(bidRef,dealerRef)
 		    ExpressionAttributeValues : {
 		      ":a":bidRef
 		    }
-	  };
+	    };
 		const getAsync = promisify(dynamo.query, dynamo);
 		return getAsync(params).then(response => {
 	    	return Promise.resolve(response);
