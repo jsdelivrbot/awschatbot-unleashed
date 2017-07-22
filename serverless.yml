@@ -27,10 +27,11 @@ provider:
         - dynamodb:PutItem
         - dynamodb:Query
         - dynamodb:GetItem
+        - dynamodb:UpdateItem
       Resource:
         - "Fn::Join": ["", ["arn:aws:dynamodb:", {"Ref": "AWS::Region"}, ":", {"Ref": "AWS::AccountId"}, ":table/car-bid-master*"]]
         - "Fn::Join": ["", ["arn:aws:dynamodb:", {"Ref": "AWS::Region"}, ":", {"Ref": "AWS::AccountId"}, ":table/car-bid-details*"]]
-        - "Fn::Join": ["", ["arn:aws:dynamodb:", {"Ref": "AWS::Region"}, ":", {"Ref": "AWS::AccountId"}, ":table/dealer-market-place-tokens*"]]
+        - "Fn::Join": ["", ["arn:aws:dynamodb:", {"Ref": "AWS::Region"}, ":", {"Ref": "AWS::AccountId"}, ":table/dealer-market-place-tokens1*"]]
         - "Fn::Join": ["", ["arn:aws:dynamodb:", {"Ref": "AWS::Region"}, ":", {"Ref": "AWS::AccountId"}, ":table/bid-master-images*"]]
         - "Fn::Join": ["", ["arn:aws:dynamodb:", {"Ref": "AWS::Region"}, ":", {"Ref": "AWS::AccountId"}, ":table/channel-details*"]]
   memorySize: 512
@@ -176,17 +177,13 @@ resources:
        AttributeDefinitions:
         - AttributeName: "market_place_type"
           AttributeType: "S"
-        - AttributeName: "security_token"
-          AttributeType: "S"  
        KeySchema:
         - AttributeName: "market_place_type"
           KeyType: "HASH"  
-        - AttributeName: "security_token"
-          KeyType: "RANGE"  
        ProvisionedThroughput:
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1
-       TableName: "dealer-market-place-tokens"
+       TableName: "dealer-market-place-tokens1"
   BidImageMaster:
      Type: AWS::DynamoDB::Table
      Properties:

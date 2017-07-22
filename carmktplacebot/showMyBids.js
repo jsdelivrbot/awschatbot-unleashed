@@ -14,7 +14,7 @@ module.exports = function(intentRequest) {
     var userId = intentRequest.userId;
     const source = intentRequest.invocationSource;
 
-
+    console.log(`The Session Attributes are ${JSON.stringify(sessionAttributes)}`);
     if (source === 'DialogCodeHook')
     {
         return validator(bidRef,dealerRef,userId,interestedInBid).then((validationResult) => {
@@ -26,7 +26,9 @@ module.exports = function(intentRequest) {
                     if(sessionAttributes.violatedSlot === validationResult.violatedSlot)
                     {
                         sessionAttributes = {};
-                        var fulfilmentResponse = lexResponses.buildFulfilmentResult('Fulfilled', 'I wish I could help you  :disappointed: but unfortunately with provided details, I will not be able to proceed any further. \n Thank you for your visit and Have a Great Day!');
+                        var fmsg = validationResult.message.content + "\r\n";
+                        fmsg += 'I wish I could help you  :disappointed: but at this point I will not be able to proceed any further. \n Thank you for your visit and Have a Great Day!'
+                        var fulfilmentResponse = lexResponses.buildFulfilmentResult('Fulfilled',fmsg);
                         return Promise.resolve(lexResponses.close(sessionAttributes,
                                                                     fulfilmentResponse.fullfilmentState,
                                                                     fulfilmentResponse.message));
@@ -101,6 +103,7 @@ module.exports = function(intentRequest) {
            return slackController(bidRef,dealerRef).then((dealerSlackIdResponse) =>{
                 var message = `Thanks, I have informed the *${dealerRef}* about your interest  :sparkles: :sparkles:. You should expect a communication from them soon :clap: \r\n Have a Great Day! ahead and bye for now`;
                 var fullfiledOrder = lexResponses.buildFulfilmentResult('Fulfilled', message);
+                sessionAttributes = {};
                 return Promise.resolve(lexResponses.close(sessionAttributes,
                                     fullfiledOrder.fullfilmentState,
                                     fullfiledOrder.message));
@@ -111,6 +114,7 @@ function processRequest(bidRef,userId) {
     return databaseManager.validateUserIdAndBidRef(bidRef,userId).then(response1 => {
         var isAuctionActive = response1.Item.is_active;
         return databaseManager.findBids(bidRef).then(response => {
+            console.log(`HURRAYYYYY number of bids found are ${JSON.stringify(response)}`);
             var message = 'Going good...';
             var message1 = 'We have received ';
             var message2 = ' Bids so far :smile:. Here are the bid details alongwith the *Dealer Reference Number* ' + '\r\n \r\n';

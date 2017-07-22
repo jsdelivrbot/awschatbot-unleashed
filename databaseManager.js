@@ -38,7 +38,8 @@ module.exports.createCarBid = function(userId,carBrandName,carModel,carYearOfMak
 
 				//item: it is a new bid record just created in saveItemToTable
 				return saveItemToTable('car-bid-master', item).then((item)=>{
-							var table = "dealer-market-place-tokens";
+					return f_getCarMarketPlaceSecurityTokens();
+					/*var table = "dealer-market-place-tokens";
 			        var marketPlaceType = "CarDealers";
 			        var params = {
 				        		TableName: table,
@@ -55,9 +56,61 @@ module.exports.createCarBid = function(userId,carBrandName,carModel,carYearOfMak
 					    		}
 				    			console.log(response);
 				    			return response;
-			  				});
+			  				});*/
 				});
 };
+function f_getCarMarketPlaceSecurityTokens() {
+	var table = "dealer-market-place-tokens1";
+	var chkMarket = "CarDealers";
+ 	var paramsQuery = {
+	    TableName : table,
+	    KeyConditionExpression: "#market = :markettype",
+	    ExpressionAttributeNames:{
+	        "#market": "market_place_type"
+	    },
+	    ExpressionAttributeValues: {
+	        ":markettype":'CarDealers'
+	    }
+	};
+	const getAsync = promisify(dynamo.query, dynamo);
+	return getAsync(paramsQuery).then(response => {
+		var mytokens;
+        response.Items.forEach(function(item) {
+            console.log(" -", JSON.stringify(item.tokens) + "\r\n"); // 0 get first tokrn replace 0 and you will get all the tokens
+            mytokens = item.tokens;
+            return false;      
+        });
+        console.log(`Return all the tokens from the database ${JSON.stringify(mytokens)}`);
+        return Promise.resolve(mytokens);
+        /*var tonkens
+        mytokens.forEach(function(ding) {
+            console.log(`${ding.security_token}`);
+        });*/
+    });
+}
+module.exports.getCarMarketPlaceSecurityTokens = function(){
+	return f_getCarMarketPlaceSecurityTokens();
+};
+module.exports.getSlackTeamSecurityToken = function(){
+		var table = "dealer-market-place-tokens";
+		var marketPlaceType = "CarDealers";
+		var params = {
+					TableName: table,
+					KeyConditionExpression: "market_place_type = :a",
+				ExpressionAttributeValues : {
+						":a":marketPlaceType
+				}
+			}
+			const getAsync = promisify(dynamo.query, dynamo);
+			return getAsync(params).then(response => {
+				if (_.isEmpty(response)) {
+					console.log('Could not get the security token out of dealer-market place token table');
+					return Promise.reject(new Error('Could not get the security token out of dealer-market place token table'));
+				}
+				console.log(response);
+				return response;
+			});
+}
 /*
 * this methods returns the bid detail record from car-bid-detail for
 * a bid reference number and a dealer name. Since dealer name is a
@@ -226,26 +279,7 @@ module.exports.createChannelDetailsRecord = function(channelId,auctionExpiryDate
 				return Promise.resolve(item);
 		});
 };
-module.exports.getSlackTeamSecurityToken = function(){
-		var table = "dealer-market-place-tokens";
-		var marketPlaceType = "CarDealers";
-		var params = {
-					TableName: table,
-					KeyConditionExpression: "market_place_type = :a",
-				ExpressionAttributeValues : {
-						":a":marketPlaceType
-				}
-			}
-			const getAsync = promisify(dynamo.query, dynamo);
-			return getAsync(params).then(response => {
-				if (_.isEmpty(response)) {
-					console.log('Could not get the security token out of dealer-market place token table');
-					return Promise.reject(new Error('Could not get the security token out of dealer-market place token table'));
-				}
-				console.log(response);
-				return response;
-			});
-}
+
 function saveItemToTable(tableName, item) {
 	const params = {
     	TableName: tableName,
