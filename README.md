@@ -25,9 +25,9 @@ $ sls deploy
 
 1. [Market Place Apps](http://marketplaceapps.s3-website-us-east-1.amazonaws.com)
 
-2. Working Chatbot is installed on Slack on techunleashed.slack.com
+2. Working Chatbot is installed on Slack on [Car Seller](https://techunleashed.slack.com/)
 
-3. Working Dealer Market Place Slack app is installed on carsmktplace.slack.com
+3. Working Dealer Market Place Slack apps is installed on [MarketPlace-1](https://carsmktplace.slack.com/) and [MarketPlace-2](https://carmarketplace-2.slack.com/)
 
 4. To have access to Chatbot and Dealer Market place please send an email to vikasbajajs@gmail.com or rajatratewal@gmail.com
 
