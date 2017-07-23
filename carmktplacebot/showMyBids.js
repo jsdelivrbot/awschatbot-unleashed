@@ -101,7 +101,11 @@ module.exports = function(intentRequest) {
      if (source === 'FulfillmentCodeHook')
      {
            return slackController(bidRef,dealerRef).then((dealerSlackIdResponse) =>{
-                var message = `Thanks, I have informed the *${dealerRef}* about your interest  :sparkles: :sparkles:. You should expect a communication from them soon :clap: \r\n Have a Great Day! ahead and bye for now`;
+                var message = `Thanks, I have informed the *${dealerRef}* about your interest  :sparkles: :sparkles:. ` +
+                               `You should expect a communication from them soon :clap: \r\n ` + 
+                               `Have a Great Day! ahead and bye for now \r\n \r\n` +
+                               `:thumbsup: Allow me help me your friends selling their Car (if require) by spreading the word about me. I am found at the link \r\n` +
+                               `http://marketplaceapps.s3-website-us-east-1.amazonaws.com`;
                 var fullfiledOrder = lexResponses.buildFulfilmentResult('Fulfilled', message);
                 sessionAttributes = {};
                 return Promise.resolve(lexResponses.close(sessionAttributes,
@@ -116,7 +120,7 @@ function processRequest(bidRef,userId) {
         return databaseManager.findBids(bidRef).then(response => {
             console.log(`HURRAYYYYY number of bids found are ${JSON.stringify(response)}`);
             var message = 'Going good...';
-            var message1 = 'We have received ';
+            var message1 = 'I have received ';
             var message2 = ' Bids so far :smile:. Here are the bid details alongwith the *Dealer Reference Number* ' + '\r\n \r\n';
             var message3 = '';
             var nobidsmessage = `hmm...I could not find any bids for reference ${bidRef} your Car as of now  :disappointed:. I am sure we will have something for you soon`;

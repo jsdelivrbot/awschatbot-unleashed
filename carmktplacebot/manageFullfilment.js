@@ -69,7 +69,10 @@ function createCarBid(userId,carBrandName,carModel,
                         shortDescription,
                         maximumSellingPrice,
                         numberofDays);
-      var message = `Thanks, Your Car ${carBrandName} ${carModel} ${carYearOfMake} has been put up for bid :bell: . \r\n Please quote the reference number *${uniqueReferenceNumber}* :pushpin: to know Bids against your Car`;
+      var message = `Thanks, Your Car ${carBrandName} ${carModel} ${carYearOfMake} has been put up for bid :bell: . \r\n ` + 
+                     `Please quote the reference number *${uniqueReferenceNumber}* :pushpin: to know Bids against your Car \r\n \r\n` +
+                     `:thumbsup: Allow me help me your friends selling their Car (if require) by spreading the word about me. I am found at the link \r\n` +
+                     `http://marketplaceapps.s3-website-us-east-1.amazonaws.com`;
       return lexResponses.buildFulfilmentResult('Fulfilled', message);
   });
 }

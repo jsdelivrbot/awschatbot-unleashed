@@ -26,7 +26,7 @@ module.exports.createCarBid = function(userId,carBrandName,carModel,carYearOfMak
 
 				let now = new Date();
 				let auctionCreateDate = date.format(now,'YYYY-MM-DD');
-				let tempAuctionExpiryDate = date.addDays(now,numberofDays);
+				let tempAuctionExpiryDate = date.addDays(now,parseInt(numberofDays) + 1);
 				let auctionExpiryDate = date.format(tempAuctionExpiryDate,'YYYY-MM-DD');
 
 				console.log(`Auction Creation Date is ${auctionCreateDate}`);
@@ -268,11 +268,11 @@ module.exports.checkValidBidReference = function(bidRef)
 			return Promise.resolve("Y");
 		});
 };
-module.exports.createChannelDetailsRecord = function(channelId,auctionExpiryDate,uniqueReferenceNumber)
+module.exports.createChannelDetailsRecord = function(channelId,channelArchiveDate,uniqueReferenceNumber)
 {
 		const item = {};
 		item.channel_id = channelId;
-		item.channel_expiry_date = auctionExpiryDate;
+		item.channel_expiry_date = channelArchiveDate;
 		item.bid_reference = uniqueReferenceNumber;
 		//item: it is a new bid record just created in saveItemToTable
 		return saveItemToTable('channel-details', item).then((item)=>{

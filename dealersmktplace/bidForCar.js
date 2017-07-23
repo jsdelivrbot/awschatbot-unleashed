@@ -43,6 +43,23 @@ function acceptBid(request) {
       		var dealerName = request.user_name;
       		var dealerSlackId = request.user_id;
       		var bidAmount = array[0];
+          var isNumericFlag = isNumeric(bidAmount);
+          if(!isNumericFlag)
+          {
+              const response = {
+                  statusCode: 200,
+                  body: JSON.stringify({
+                      "message" : 'There is issue with your bid',
+                      "attachments": [
+                      {
+                         "color": "#ed0707",
+                          "text" : "You bid was not accepted as the Bid Amount entered by you is not numeric :heavy_exclamation_mark: \n Send your bid in the following format /bidforcar <numeric value> <bid reference> \n e.g. /bidforcar 200000 ds57jwzgf7"
+                      }
+                    ]
+                  }),
+             };
+             return Promise.resolve(response);
+          } 
           return checkValidBidReference(bidReference).then(response => {
               if(response.toLowerCase() === 'n')
               {

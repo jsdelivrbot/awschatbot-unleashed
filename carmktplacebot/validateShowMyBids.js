@@ -26,8 +26,15 @@ module.exports = function (bidRef,dealerRef,userId,interestedInBid) {
                                                                      `:flushed: Bid Reference ${bidRef} does not belong to you. Enter your bid reference and try again`,
                                                                      null,null,null));
                   }
+                  if(response.Item.is_active === 'N')
+                  {
+                       var nobidsmessage = `:flushed: Auction with reference number *${bidRef}* has been expired hence will not able to help any further with this.`;
+                      return Promise.resolve(buildValidationResult(false,'BidRef',
+                                                                     nobidsmessage,
+                                                                     null,null,null));
+                  }
                   return databaseManager.findBids(bidRef).then(response => {
-                      console.log("After calling findbid checking for response Count");
+                      console.log(`After calling findbid checking for response Count ${JSON.stringify(response)}`);
                       if(response.Count === 0)
                       {
                         var nobidsmessage = `:flushed: hmm...I could not find any bids for reference *${bidRef}* your Car as of now  :disappointed:. I am sure we will have something for you soon`;
@@ -35,6 +42,7 @@ module.exports = function (bidRef,dealerRef,userId,interestedInBid) {
                                                                      nobidsmessage,
                                                                      null,null,null));
                       }
+                     
                       console.log('Bid reference is valid hence moving forward');
                       return Promise.resolve(buildValidationResult(true, null,null,null,null,null));
                   });

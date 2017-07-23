@@ -142,7 +142,7 @@ module.exports = function (carBrandName,
                                           'Choose one of the options below',
                                           true));
           }
-          if(numberofDays < 3  || numberofDays > 5)
+          if(numberofDays < 1  || numberofDays > 3)
           {
                 return Promise.resolve(buildValidationResult(false,
                                           'NumberOfDays',

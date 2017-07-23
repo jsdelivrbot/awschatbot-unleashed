@@ -20,8 +20,9 @@ module.exports = function (securityToken,
                             numberofDays){
     let now = new Date();
     let auctionCreateDate = date.format(now,'YYYY-MM-DD');
-    let tempAuctionExpiryDate = date.addDays(now,parseInt(numberofDays));
+    let tempAuctionExpiryDate = date.addDays(now,parseInt(numberofDays) + 1);
     let auctionExpiryDate = date.format(tempAuctionExpiryDate,'YYYY-MM-DD');
+    let channelArchiveDate = date.format(date.addDays(now,parseInt(numberofDays) + 2),'YYYY-MM-DD');
     channelName += "-" + auctionExpiryDate;
     var url = "https://slack.com/api/channels.create";
     var options = {
@@ -35,7 +36,7 @@ module.exports = function (securityToken,
     };
     request(options).then((response) => {
         var channelId = response.channel.id;
-        return databaseManager.createChannelDetailsRecord(channelId,auctionExpiryDate,uniqueReferenceNumber).then(() => {
+        return databaseManager.createChannelDetailsRecord(channelId,channelArchiveDate,uniqueReferenceNumber).then(() => {
               return databaseManager.checkImageUpload(uniqueReferenceNumber).then(imageImploadResponse => {
                       var filenames='';
                       imageImploadResponse.Items.forEach(function(item) {
@@ -55,10 +56,14 @@ module.exports = function (securityToken,
                             "Short shortDescription about the Vehicle : *" + shortDescription + "*" + "\r\n" +
                             "Car available in City : *" + carCity + "*" + "\r\n" +
                             "Auction Creation Date : *" + auctionCreateDate + "*" + "\r\n" +
-                            "Auction Expiry Date: *" + auctionExpiryDate + "*" + "\r\n \r\n" +
-                            "Use the following reference number to bid for the vehicle *" + uniqueReferenceNumber + "*" + "\r\n" +
+                            "Auction Expiry Date: *" + auctionExpiryDate + "*" + "\r\n" +
+                            "Bid Reference Number: *" + uniqueReferenceNumber + "*" + "\r\n \r\n" +
                             "To submit your bid type type the following command in the message box \r\n" +
-                            "*/bidforcar <amount> <bid reference> e.g. /bidforcar 600000 " + uniqueReferenceNumber + "*" + "\r\n";
+                            "*/bidforcar <amount> <bid reference> e.g. /bidforcar 600000 " + uniqueReferenceNumber + "*" + "\r\n" +
+                            "```Bids after " + auctionExpiryDate + " will not be entertained for this Auction" + "\r\n" + 
+                            "This Channel will be archived on " + channelArchiveDate + " (1 day after the Auction Expiry date) post that above information will not be accessible```" + "\r\n \r\n" +
+                            ":loudspeaker: *_Spread the word_* - If you have *Fellow Used Car Dealers* :two_men_holding_hands: who are _Not Yet Part_ of *Car Market Place* " + "\r\n" +
+                            ":thumbsup: Encourage them to be part of the *Car Market Place Ecosystem* and take benefit of Acvite Selling by registering their Slack Team at \r\n http://marketplaceapps.s3-website-us-east-1.amazonaws.com" + "\r\n";
                             if(filenames !== '')
                             {
                               message += "\r\n You can view images of the Car at following links: \r\n" + filenames;

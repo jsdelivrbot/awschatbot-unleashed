@@ -98,9 +98,9 @@ module.exports.buildOptions = function(forSlot)
     else if (forSlot === 'NumberOfDays')
     {
       return [
+          { text: 'In 1 Day', value: 1},
+          { text: 'In 2 Days', value: 2},
           { text: 'In 3 Days', value: 3},
-          { text: 'In 4 Days', value: 4},
-          { text: 'In 5 Days', value: 5},
       ];
     }
     else if (forSlot === 'ImageUpload')

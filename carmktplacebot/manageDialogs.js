@@ -166,7 +166,7 @@ module.exports = function(intentRequest) {
               responseCard = lexResponses.buildResponseCard('Uplod Images of Your Car which increases chances for better price',
                                                         'Specify your input by selecting an option below',
                                                         options);
-              var message = { contentType: 'PlainText', content: `To upload *Images* of your *Car* use ${sessionAttributes.uniqueReferenceNumber} reference number on the URL below.*Post Upload*, click *Have Uploaded* or *Have No Images* if you do not want.\r\n - https://marketplaceimages.herokuapp.com/`};
+              var message = { contentType: 'PlainText', content: `I have observed that Cars with good images recieve good bids so why don't you upload few images of your car \r\n using Unique Reference Number ( ${sessionAttributes.uniqueReferenceNumber} ) on the link below.\r\n Pls note *Post Upload*, click *Have Uploaded* or *Have No Images* in case you haven't.\r\n - https://marketplaceimages.herokuapp.com/`};
               var response = lexResponses.elicitSlot(sessionAttributes,
                                                     intentRequest.currentIntent.name,
                                                     slots,
@@ -185,7 +185,7 @@ module.exports = function(intentRequest) {
               var localEmailAddress = emailAddress.substring(emailAddress.indexOf("|") + 1);
               let now = new Date();
             	let auctionCreateDate = date.format(now,'YYYY-MM-DD');
-            	let tempAuctionExpiryDate = date.addDays(now,parseInt(numberofDays));
+            	let tempAuctionExpiryDate = date.addDays(now,parseInt(numberofDays) + 1);
             	let auctionExpiryDate = date.format(tempAuctionExpiryDate,'YYYY-MM-DD');
 
               var message = {
