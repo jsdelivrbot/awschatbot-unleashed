@@ -48,6 +48,11 @@ $ sls deploy
 
 3. Sit tight and let Bot ask you relevant question for your car
 
+## How to Initiate Bid From Dealer App
+
+1. /bidforcar amount bidreferenceno
+
+
 ## Architecture
 
 Higl level Overview of Architecture
