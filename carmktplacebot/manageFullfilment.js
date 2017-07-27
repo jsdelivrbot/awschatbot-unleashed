@@ -86,22 +86,7 @@ function createBidChannel(dealerMarketPlaceResponse,channelName,uniqueReferenceN
     * We may have multiple Dealer Market Places hence it will create channels on all the Dealer Market places
     * Multiple Dealer Market Places are only possible when multiple slack teams have installed Dealer MarketPlace app
     */
-    /*dealerMarketPlaceResponse.Items.forEach(function(item) {
-        slackChannelFactory(item.security_token,
-                                channelName,
-                                uniqueReferenceNumber,
-                                carBrandName,
-                                carModel,
-                                carYearOfMake,
-                                carVariant,
-                                carKmDriven,
-                                carColor,
-                                numberOfOwners,
-                                carCity,
-                                shortDescription,
-                                maximumSellingPrice,
-                                numberofDays);
-    });*/
+   
     dealerMarketPlaceResponse.forEach(function(item) {
        console.log(`VIKAS BAJAJ SONIA BAJAJ ${item.security_token}`);
        slackChannelFactory(item.security_token,

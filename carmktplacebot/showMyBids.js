@@ -14,8 +14,7 @@ module.exports = function(intentRequest) {
     var userId = intentRequest.userId;
     const source = intentRequest.invocationSource;
 
-    console.log(`The Session Attributes are ${JSON.stringify(sessionAttributes)}`);
-    if (source === 'DialogCodeHook')
+   if (source === 'DialogCodeHook')
     {
         return validator(bidRef,dealerRef,userId,interestedInBid).then((validationResult) => {
            if (!validationResult.isValid)
@@ -118,7 +117,6 @@ function processRequest(bidRef,userId) {
     return databaseManager.validateUserIdAndBidRef(bidRef,userId).then(response1 => {
         var isAuctionActive = response1.Item.is_active;
         return databaseManager.findBids(bidRef).then(response => {
-            console.log(`HURRAYYYYY number of bids found are ${JSON.stringify(response)}`);
             var message = 'Going good...';
             var message1 = 'I have received ';
             var message2 = ' Bids so far :smile:. Here are the bid details alongwith the *Dealer Reference Number* ' + '\r\n \r\n';

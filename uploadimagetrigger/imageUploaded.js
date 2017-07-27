@@ -9,8 +9,6 @@ module.exports = function (event) {
   var filename = event.Records[0].s3.object.key;
   var UniqueRef = filename.substring(0,filename.indexOf("%24")); //%24 is $ sign and when filename has special characters its passed as UTF8
   const response = {message: 'A new file Named' + filename + ' was uploaded to the bucket ' + bucket + ' with unique ref ' + UniqueRef,event};
-  console.log('A new file named:'+filename +' was created' + ' and the unique ref is ' + UniqueRef);
-
   var uuid1 = uuid.v1();
 
   var params = {
@@ -21,12 +19,6 @@ module.exports = function (event) {
         "filename":'https://s3.amazonaws.com/'+ bucket + '/' + filename
     }
   };
-
-  console.log(uuid1);
-  console.log(UniqueRef);
-  console.log(filename);
-
-  console.log("Adding a new item...");
   docClient.put(params, function(err, data) {
     if (err) {
         console.error("Unable to add item. Error JSON:", JSON.stringify(err, null, 2));

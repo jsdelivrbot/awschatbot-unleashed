@@ -9,10 +9,9 @@ module.exports = function (bidRef,dealerRef,userId,interestedInBid) {
 
      if(bidRef !== null && interestedInBid === null)
      {
-            console.log(`Inside Validate show my bids and validating User id and bidreference number ${bidRef} and dealer ref ${dealerRef}`);
+            
             return databaseManager.validateUserIdAndBidRef(bidRef,userId).then(response => {
-                  console.log(`Checking the Bid Reference for Showing interest ${JSON.stringify(response)}`);
-                  if (_.isEmpty(response)) {
+                 if (_.isEmpty(response)) {
                         return Promise.resolve(buildValidationResult(false,
                                                                      'BidRef',
                                                                      `Could not find any bids which matches *${bidRef}* Please try again and make sure you have caps lock off`,
@@ -20,8 +19,6 @@ module.exports = function (bidRef,dealerRef,userId,interestedInBid) {
                   }
                   if(response.Item.userId !== userId)
                   {
-                        console.log(`bid reference ${bidRef} does not belong to you.`);
-                        console.log(`recieved user id ${userId} and bid user id is ${response.Item.userId}`);
                         return Promise.resolve(buildValidationResult(false,'BidRef',
                                                                      `:flushed: Bid Reference ${bidRef} does not belong to you. Enter your bid reference and try again`,
                                                                      null,null,null));
@@ -34,7 +31,6 @@ module.exports = function (bidRef,dealerRef,userId,interestedInBid) {
                                                                      null,null,null));
                   }
                   return databaseManager.findBids(bidRef).then(response => {
-                      console.log(`After calling findbid checking for response Count ${JSON.stringify(response)}`);
                       if(response.Count === 0)
                       {
                         var nobidsmessage = `:flushed: hmm...I could not find any bids for reference *${bidRef}* your Car as of now  :disappointed:. I am sure we will have something for you soon`;
@@ -42,8 +38,6 @@ module.exports = function (bidRef,dealerRef,userId,interestedInBid) {
                                                                      nobidsmessage,
                                                                      null,null,null));
                       }
-                     
-                      console.log('Bid reference is valid hence moving forward');
                       return Promise.resolve(buildValidationResult(true, null,null,null,null,null));
                   });
                   

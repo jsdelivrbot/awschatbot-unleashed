@@ -10,7 +10,6 @@ module.exports.intents = (event, context, callback) => {
 	try {
 	    console.log(`event.bot.name=${event.bot.name}`);
 	    dispatch(event).then(response => {
-	    	console.log(`final Response ${JSON.stringify(response)}`);
 	    	callback(null, response);
 	    });
 	} catch (err) {
@@ -46,7 +45,7 @@ module.exports.bidForCar = (event, context, callback) => {
 };
 module.exports.markBidInvalid = (event, context, callback) => {
 	try {
-		console.log("Called as part of Cron Job That runs Everyday at 10 am");
+		console.log("Called as part of Cron Job That runs Everyday");
 		var response = bidInactive(event);
 		callback(null, response);
 	} catch(err) {

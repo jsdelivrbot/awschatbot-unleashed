@@ -24,9 +24,7 @@ function archiveChannels(){
       }
     };
     docClient.query(paramsQuery, function(err, securityTokensData) {
-          console.log(`Security token which we got within archive channel are ${JSON.stringify(securityTokensData)}`);
           var today=new Date().toISOString().substr(0,10);
-          console.log("Querying for bids that are to be marked as invalid.");
           var params = {
               TableName : "channel-details",
               IndexName : "channel_expiry_date-index", // This was missing in main code
@@ -39,7 +37,6 @@ function archiveChannels(){
              }
           };
           docClient.query(params, function(err, archiveChannelsData) {
-              console.log(`Hurray Archived channel list ${JSON.stringify(archiveChannelsData)}`);
               securityTokensData.Items[0].tokens.forEach(function(item)   {
                     archiveChannelsData.Items.forEach(function(channelDetail){
                           console.log(`Running Archivval request for security_token ${JSON.stringify(item.security_token)} and channel id ${JSON.stringify(channelDetail.channel_id)}`);
@@ -82,9 +79,7 @@ function archiveChannels(){
    
 }
 function invalidateBids() {
-    console.log("Checking bids which have to Expire***************************");	
     var today=new Date().toISOString().substr(0,10);
-    console.log("Querying for bids that are to be marked as invalid.");
     var params = {
         TableName : "car-bid-master",
         IndexName : "auction_end_date-index", // This was missing in main code
@@ -100,7 +95,6 @@ function invalidateBids() {
         if (err) {
             console.log("Unable to query. Error:", JSON.stringify(err, null, 2));
         } else {
-            console.log("Query succeeded.");
             data.Items.forEach(function(item) {
                 console.log(" -", item.bid_reference + ": " + item.auction_create_date
                 + " ... " + item.auction_end_date

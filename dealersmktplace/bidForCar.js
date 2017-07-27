@@ -116,23 +116,7 @@ function acceptBid(request) {
                   });
                 }
         });
-      	/*	return recordBidSubmission(bidReference,dealerName,dealerSlackId,bidAmount).then(() =>{
-      			const response = {
-              				statusCode: 200,
-              				body: JSON.stringify({
-                			"message": 'Bid for The Car is:' + request['text'] + ' posted by user:' + request['user_name'] + ' in Channel:' + request['channel_name'],
-                			"attachments": [
-        						{
-            						"color": "#36a64f",
-	        						"text": "Cool :smile: Your Bid for Car reference : " + array[1] + " for INR. " + array[0] + " has been recorded successfully for seller to look at. \n \n Expect a reply if seller is interested. \n \n In case you like to bid again you are allowed until bid is closed."
-        						}
-    						]
-              			}),
-          		};
-          		return Promise.resolve(response);
-      		});*/
-
-      }
+     }
   }catch(err) {
       Promise.reject(err);
   }

@@ -29,8 +29,7 @@ module.exports.createCarBid = function(userId,carBrandName,carModel,carYearOfMak
 				let tempAuctionExpiryDate = date.addDays(now,parseInt(numberofDays) + 1);
 				let auctionExpiryDate = date.format(tempAuctionExpiryDate,'YYYY-MM-DD');
 
-				console.log(`Auction Creation Date is ${auctionCreateDate}`);
-				console.log(`Auction Expiry Date is ${auctionExpiryDate}`);
+				
 				item.auction_create_date = auctionCreateDate;
 				item.auction_end_date = auctionExpiryDate;
 				item.number_of_days = numberofDays;
@@ -39,24 +38,6 @@ module.exports.createCarBid = function(userId,carBrandName,carModel,carYearOfMak
 				//item: it is a new bid record just created in saveItemToTable
 				return saveItemToTable('car-bid-master', item).then((item)=>{
 					return f_getCarMarketPlaceSecurityTokens();
-					/*var table = "dealer-market-place-tokens";
-			        var marketPlaceType = "CarDealers";
-			        var params = {
-				        		TableName: table,
-				        		KeyConditionExpression: "market_place_type = :a",
-					    		ExpressionAttributeValues : {
-					      			":a":marketPlaceType
-					    		}
-					    	}
-			          const getAsync = promisify(dynamo.query, dynamo);
-			    			return getAsync(params).then(response => {
-					    		if (_.isEmpty(response)) {
-						    		console.log('Could not get the security token out of dealer-market place token table');
-						    		return Promise.reject(new Error('Could not get the security token out of dealer-market place token table'));
-					    		}
-				    			console.log(response);
-				    			return response;
-			  				});*/
 				});
 };
 function f_getCarMarketPlaceSecurityTokens() {
@@ -76,11 +57,9 @@ function f_getCarMarketPlaceSecurityTokens() {
 	return getAsync(paramsQuery).then(response => {
 		var mytokens;
         response.Items.forEach(function(item) {
-            console.log(" -", JSON.stringify(item.tokens) + "\r\n"); // 0 get first tokrn replace 0 and you will get all the tokens
             mytokens = item.tokens;
             return false;      
         });
-        console.log(`Return all the tokens from the database ${JSON.stringify(mytokens)}`);
         return Promise.resolve(mytokens);
         /*var tonkens
         mytokens.forEach(function(ding) {
@@ -104,10 +83,9 @@ module.exports.getSlackTeamSecurityToken = function(){
 			const getAsync = promisify(dynamo.query, dynamo);
 			return getAsync(params).then(response => {
 				if (_.isEmpty(response)) {
-					console.log('Could not get the security token out of dealer-market place token table');
 					return Promise.reject(new Error('Could not get the security token out of dealer-market place token table'));
 				}
-				console.log(response);
+				
 				return response;
 			});
 }
@@ -132,12 +110,9 @@ module.exports.getCarBidDetail = function(bidRef,dealer_name){
 	};
 	const getAsync = promisify(dynamo.query, dynamo);
 	return getAsync(params).then(response => {
-		console.log(`In GetCarBidDetail the response is ${JSON.stringify(response)}`);
 		if (_.isEmpty(response)) {
-			console.log(`record with bid reference ${bidRef} and dealer_name ${dealer_name} does not exist`);
 			return Promise.reject(new Error(`record with bid reference ${bidRef} and dealer_name ${dealer_name} does not exist`));
 		}
-		console.log(`Found Car bid details record ${JSON.stringify(response)}`);
 		return response;
 	});
 };
@@ -172,10 +147,8 @@ module.exports.findBids = function(bidRef) {
 		const getAsync = promisify(dynamo.query, dynamo);
 		return getAsync(params).then(response => {
 		    if (_.isEmpty(response)) {
-		      console.log(`Bid with bidId:${bidRef} not found`);
 		      return Promise.reject(new Error(`Bid with bidId:${bidRef} not found`));
 		    }
-	    	console.log(response);
 	    	return response;
 	  	});
 };
@@ -201,10 +174,8 @@ module.exports.checkImageUpload = function(uniqueReferenceNumber) {
 		const getAsync = promisify(dynamo.query, dynamo);
 		return getAsync(params).then(response => {
 		    if (_.isEmpty(response)) {
-		      console.log(`================No images found in the database uniqueReferenceNumber ${uniqueReferenceNumber}`);
 		      return Promise.reject(new Error(`No images found in the database uniqueReferenceNumber ${uniqueReferenceNumber}`));
 		    }
-	    	console.log(`Found image record for refernce Number : ${JSON.stringify(response)}`);
 	    	return response;
 	  	});
 };
@@ -287,8 +258,7 @@ function saveItemToTable(tableName, item) {
   	};
 	const putAsync = promisify(dynamo.put, dynamo);
 	return putAsync(params).then(() => {
-    	console.log(`Saving item ${JSON.stringify(item)}`);
-      	return item;
+    	return item;
     }).catch(error => {
       Promise.reject(error);
     });
